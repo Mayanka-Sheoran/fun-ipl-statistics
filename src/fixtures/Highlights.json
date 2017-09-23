@@ -1,0 +1,18 @@
+{
+"Highlights": [{
+  "type": "good",
+  "text": "This is my highlight number 1"
+  },{
+  "type": "good",
+  "text": "This is my highlight number 2"
+  }, {
+  "type": "bad",
+  "text": "This is my highlight number 3"
+  },{
+  "type": "good",
+  "text": "This is my highlight number 4"
+  }, {
+  "type": "warning",
+  "text": "This is my highlight number 5"
+  }]
+}

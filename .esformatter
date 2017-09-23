@@ -1,0 +1,9 @@
+{
+  "plugins": [
+    "esformatter-jsx"
+  ],
+
+  "jsx" : {
+  "spaceInJSXExpressionContainers": ""
+  }
+}

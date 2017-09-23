@@ -1,0 +1,32 @@
+@import '../../styles/variables';
+
+.container {
+  height: 50px;
+  z-index: 2;
+  color: $theme_dark_red;
+  box-shadow: 0 0 5px 0 rgba(0,0,0,.25);
+  font-size: $font-medium;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: $theme_white;
+
+  :global {
+    .modal-toggle {
+      position: fixed;
+      right: 10px;
+      width: 15px;
+      height: 15px;
+      font-size: 10px;
+      border-radius: 100%;
+
+      &.info {
+        border: 1px solid $theme_dark_red;
+      }
+
+      &.close {
+        font-size: $font-medium;
+      }
+    }
+  }
+}

@@ -1,0 +1,8 @@
+@import '../../styles/variables';
+
+.selected {
+   background: url('../../assets/down-arrow.svg') no-repeat right center;
+   width: 130px;
+   font-size: $font-medium;
+   color: $theme_text_grey;
+}

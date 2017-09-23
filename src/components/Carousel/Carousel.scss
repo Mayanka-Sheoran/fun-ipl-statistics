@@ -1,0 +1,24 @@
+@import '../../styles/variables';
+
+.container {
+  :global {
+    .slider, slider-frame {
+      min-height: 200px;
+    }
+    .slider-decorator-0, .slider-decorator-1 {
+      display: none;
+    }
+    .slider-decorator-2 ul {
+      top: 10px!important;
+    }
+    .good {
+      color: $theme_green;
+    }
+    .bad {
+      color: $theme_red;
+    }
+    .warning {
+      color: $theme_yellow;
+    }
+  }
+}

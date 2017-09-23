@@ -1,0 +1,103 @@
+:global {
+  @import 'base';
+  @import '~normalize.css/normalize';
+  // Some best-practice CSS that's useful for most apps
+  // Just remove them if they're not what you want
+  html {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+
+  *,
+  *:before,
+  *:after {
+    box-sizing: inherit;
+  }
+  .full-width {
+    width: 100%;
+  }
+  .full-height {
+    height: 100%;
+  }
+  .full-size {
+    width: 100%;
+    height: 100%;
+  }
+  .flex-center-xy {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .no-margin {
+    margin: 0px;
+  }
+  .yellow {
+    background-color:$theme_yellow;
+  }
+  .red {
+    background-color: $theme_red;
+  }
+  .green {
+    background-color: $theme_green;
+  }
+  .black {
+    background-color: $theme_black;
+  }
+  .darkRed {
+    background-color: $theme_red;
+  }
+  .orange {
+    background-color: $theme_orange;
+  }
+  .purple {
+    background-color: $theme_purple;
+  }
+  .grey {
+    background-color: $theme_grey;
+  }
+  .blue {
+    background-color: $theme_blue;
+  }
+  .white {
+    background-color: $theme_white;
+  }
+  .black-font {
+    color: $theme_black;
+  }
+  .white-font {
+    color: $theme_white;
+  }
+  .theme {
+    background-color: $theme_dark_red;
+  }
+  select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border: none;
+  }
+  .title-block {
+  background-color: $theme_pink;
+  height: 180px;
+  align-items: center;
+  text-align: center;
+  color: $theme_text_grey;
+  font-size: $font-small;
+  width: 30%;
+  justify-content: center;
+  }
+  .scroll {
+    overflow: auto;
+  }
+  .no-display {
+    display: none;
+  }
+  .full-height {
+    height: 100%;
+  }
+}
