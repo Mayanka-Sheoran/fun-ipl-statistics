@@ -15,7 +15,7 @@ const Dropdown = (props) => {
 }
 
 Dropdown.propTypes = {
-  optionList: React.PropTypes.object.isRequired,
+  optionList: React.PropTypes.array.isRequired,
   onChange: React.PropTypes.func
 }
 
