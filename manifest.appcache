@@ -1,0 +1,17 @@
+CACHE MANIFEST
+# 37aa6bece4cfac92c418
+
+http://192.168.0.5:3000/app.37aa6bece4cfac92c418.js
+http://192.168.0.5:3000/vendor.37aa6bece4cfac92c418.js
+http://192.168.0.5:3000/app.37aa6bece4cfac92c418.js.map
+http://192.168.0.5:3000/vendor.37aa6bece4cfac92c418.js.map
+http://192.168.0.5:3000/favicon.ico
+http://192.168.0.5:3000/index.html
+http://192.168.0.5:3000/manifest.json
+http://192.168.0.5:3000/ball-favicon.png
+
+NETWORK:
+*
+
+SETTINGS:
+prefer-online
