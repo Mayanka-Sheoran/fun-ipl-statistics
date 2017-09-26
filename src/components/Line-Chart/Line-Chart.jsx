@@ -3,21 +3,28 @@ import Highcharts from 'highcharts'
 
 class LineChart extends React.Component {
   componentDidMount () {
-    const { data } = this.props
-    this.initializeChart(data)
+    const { data, series } = this.props
+    this.initializeChart(data, series)
   }
-
+  componentDidUpdate () {
+    const { data, series } = this.props
+    this.initializeChart(data, series)
+  }
   render () {
+    console.log(this.props)
     return (< div id='container'
       className='scroll' / >)
   }
-  initializeChart = (data) => {
+  initializeChart = (data, series) => {
     Highcharts.chart('container', {
       chart: {
         type: 'line'
       },
       title: {
         text: data.title
+      },
+      credits: {
+        enabled: false
       },
       subtitle: {
         text: data.subTitle
@@ -27,17 +34,12 @@ class LineChart extends React.Component {
           text: data.yAxisTitle
         }
       },
-      legend: {
-        layout: 'vertical',
-        align: 'right',
-        verticalAlign: 'middle'
-      },
       plotOptions: {
         series: {
           pointStart: 2008
         }
       },
-      series: data.series
+      series: series
     })
   }
 }
