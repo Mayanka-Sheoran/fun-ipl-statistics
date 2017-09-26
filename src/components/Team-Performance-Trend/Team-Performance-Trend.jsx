@@ -8,6 +8,8 @@ import matches from '../../fixtures/matches.json'
 import Dropdown from '../Dropdown/Dropdown'
 import _ from 'lodash'
 import homeGrounds from '../../fixtures/Home-Ground.json'
+import HeatMap from '../Heat-Map/Heat-Map'
+// import deliveries from '../../fixtures/deliveries.json'
 
 class TeamPerformanceTrend extends React.Component {
   constructor(props) {
@@ -32,8 +34,24 @@ class TeamPerformanceTrend extends React.Component {
         title: '% of Matches won on home ground',
         name: 'Home ground wins'
       },
+      heatMapData: {
+        name: 'Average runs per season',
+        title: 'Average runs per season'
+      },
+      heatMapSeries: []
     }
     
+    // this.state.options.map(function(team) {
+    //   this.state.seasons.map(function(year) {
+    //     const dataArray = []
+    //     dataArray.push(year)
+    //     dataArray.push(team)
+    //     const groupByYear = _.groupBy(deliveries, 'batting_team')
+    //     console.log(groupByYear)
+    //   }, this)
+    // }, this)
+
+
     this.state.options.map(function(item) {
       const newOption = {}
       newOption.name = item
@@ -89,6 +107,8 @@ class TeamPerformanceTrend extends React.Component {
      }, this)
       this.state.teamTrajectoryData.push(newOption)
     }, this)  
+    
+
 
     this.data = {
         height: 200,
@@ -152,6 +172,7 @@ class TeamPerformanceTrend extends React.Component {
    </div> 
    <div className = 'flex performace-chart pl1'><PieChart data={this.state.pieChartDataHomeGround} series={this.state.selectedTeam == 'All' ? this.state.pieChartSeriesHomeGround : this.state.newpieChartSeriesHomeGround} container='containerPie2'/></div>
    </div>
+   <HeatMap data={this.state.heatMapData} container='heat-map-runs' xAxis={this.state.options} yAxis={this.state.seasons} series={this.heatMapSeries}/>
    </div> 
     </div >
   )
