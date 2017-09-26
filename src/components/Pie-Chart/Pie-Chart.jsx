@@ -3,16 +3,19 @@ import Highcharts from 'highcharts'
 
 class PieChart extends React.Component {
   componentDidMount() {
-    const { data, series } = this.props
-    this.initializeChart(data, series)
+    const { data, series, container } = this.props
+    this.initializeChart(data, series, container)
   }
-
+  componentDidUpdate () {
+    const { data, series, container } = this.props
+    this.initializeChart(data, series, container)
+  }
   render() {
-    return ( < div id = 'containerPie'
+    return ( < div id = {this.props.container}
       className = 'scroll' / > )
   }
-  initializeChart = (data, series) => {
-    Highcharts.chart('containerPie', {
+  initializeChart = (data, series, container) => {
+    Highcharts.chart(container, {
       chart: {
         plotBackgroundColor: null,
         plotBorderWidth: null,

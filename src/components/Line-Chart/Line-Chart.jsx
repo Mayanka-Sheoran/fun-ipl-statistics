@@ -11,7 +11,6 @@ class LineChart extends React.Component {
     this.initializeChart(data, series)
   }
   render () {
-    console.log(this.props)
     return (< div id='container'
       className='scroll' / >)
   }
