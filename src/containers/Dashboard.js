@@ -4,13 +4,11 @@ import { bindActionCreators } from 'redux'
 import { createAction } from 'redux-actions'
 
 // Actions
-const sampleMessage = createAction('SAMPLE_MESSAGE')
 const getData = createAction('GET_METADATA')
 
 const mapDispatchToProps = (dispatch) => {
   return {
     getData: bindActionCreators(getData, dispatch),
-    sampleMessage: bindActionCreators(sampleMessage, dispatch)
   }
 }
 

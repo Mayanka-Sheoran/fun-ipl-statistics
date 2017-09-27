@@ -2,53 +2,46 @@ import React from 'react'
 import Highcharts from 'highcharts'
 
 class BarChart extends React.Component {
-  componentDidMount () {
-    const {data} = this.props
-    this.initializeChart(data)
+  componentDidMount() {
+    const { data, series, xAxis, container } = this.props
+    this.initializeChart(data, series, xAxis, container)
   }
-
-  render () {
-    return (<div id='container' className='scroll' />)
+  componentDidUpdate() {
+    const { data, series, xAxis, container } = this.props
+    this.initializeChart(data, series, xAxis, container)
   }
-  initializeChart = (data) => {
-    Highcharts.chart('container', {
+  render() {
+    return ( < div id = { this.props.container } className = 'scroll' / > )
+  }
+  initializeChart = (data, series, xAxis, container) => {
+    Highcharts.chart(container, {
       chart: {
-        type: 'column',
-        height: data.height
+        type: 'bar'
       },
       title: {
-        text: null
+        text: data.title
       },
-      plotOptions: {
-        column: {
-          colorByPoint: true
+      xAxis: {
+        categories: xAxis,
+        title: {
+          text: null
         },
-        series: {
-          pointWidth: 20
-        }
+        tickInterval: 1
       },
-      xAxis: [
-        {
-          categories: data.xAxisCategories
-        }
-      ],
       yAxis: {
-        visible: false
+          tickPixelInterval: 100
+      }, 
+      plotOptions: {
+        bar: {
+          dataLabels: {
+            enabled: true
+          }
+        }
       },
       credits: {
         enabled: false
       },
-      legend: {
-        enabled: false
-      },
-      tooltip: {
-        enabled: false
-      },
-      series: [{
-        name: 'Performance Trend',
-        data: data.series,
-        colors: data.colors
-      }]
+      series: series
     })
   }
 }

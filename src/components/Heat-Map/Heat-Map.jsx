@@ -26,6 +26,9 @@ class HeatMap extends React.Component {
       credits: {
         enabled: false
       },
+      tooltip: {
+        enabled: false
+      },
       xAxis: {
         categories: xAxis
       },
@@ -40,13 +43,13 @@ class HeatMap extends React.Component {
         minColor: '#FFFFFF',
         maxColor: Highcharts.getOptions().colors[0]
       },
-
+    
       legend: {
         align: 'right',
         layout: 'vertical',
         margin: 0,
         verticalAlign: 'top',
-        y: 25,
+        y: 0,
         symbolHeight: 280
       },
 

@@ -9,8 +9,27 @@ import Dropdown from '../Dropdown/Dropdown'
 import _ from 'lodash'
 import homeGrounds from '../../fixtures/Home-Ground.json'
 import HeatMap from '../Heat-Map/Heat-Map'
-// import deliveries from '../../fixtures/deliveries.json'
+import deliveries2008 from '../../fixtures/2008.json'
+import deliveries2009 from '../../fixtures/2009.json'
+import deliveries2010 from '../../fixtures/2010.json'
+import deliveries2011 from '../../fixtures/2011.json'
+import deliveries2012 from '../../fixtures/2012.json'
+import deliveries2013 from '../../fixtures/2013.json'
+import deliveries2014 from '../../fixtures/2014.json'
+import deliveries2015 from '../../fixtures/2015.json'
+import deliveries2016 from '../../fixtures/2016.json'
 
+const mapping = {
+  2008: deliveries2008,
+  2009: deliveries2009,
+  2010: deliveries2010,
+  2011: deliveries2011,
+  2012: deliveries2012,
+  2013: deliveries2013,
+  2014: deliveries2014,
+  2015: deliveries2015,
+  2016: deliveries2016
+}
 class TeamPerformanceTrend extends React.Component {
   constructor(props) {
     super(props)
@@ -41,15 +60,28 @@ class TeamPerformanceTrend extends React.Component {
       heatMapSeries: []
     }
     
-    // this.state.options.map(function(team) {
-    //   this.state.seasons.map(function(year) {
-    //     const dataArray = []
-    //     dataArray.push(year)
-    //     dataArray.push(team)
-    //     const groupByYear = _.groupBy(deliveries, 'batting_team')
-    //     console.log(groupByYear)
-    //   }, this)
-    // }, this)
+    this.state.options.map(function(team) {
+      this.state.seasons.map(function(year) {
+        const dataArray = []
+        const averageArray = []
+        dataArray.push(this.state.options.indexOf(team))
+        dataArray.push(this.state.seasons.indexOf(year))
+        const groupByMatch = _.groupBy(_.filter(mapping[year], function(match) { 
+            return match['batting_team'] == team
+         }), 'match_id')
+        _.map(groupByMatch, function(match){
+           const runsInOneMatch = match.reduce(function (n, match) {
+            return n + (parseInt(match.total_runs))
+          }, 0)
+           averageArray.push(runsInOneMatch)
+        })
+         const average = _.reduce(averageArray, function(memo, num) {
+          return memo + num;
+        }, 0) / (averageArray.length === 0 ? 1 : averageArray.length)
+         dataArray.push(Math.round(average))
+         this.state.heatMapSeries.push(dataArray)
+      }, this)
+    }, this)
 
 
     this.state.options.map(function(item) {
@@ -172,7 +204,7 @@ class TeamPerformanceTrend extends React.Component {
    </div> 
    <div className = 'flex performace-chart pl1'><PieChart data={this.state.pieChartDataHomeGround} series={this.state.selectedTeam == 'All' ? this.state.pieChartSeriesHomeGround : this.state.newpieChartSeriesHomeGround} container='containerPie2'/></div>
    </div>
-   <HeatMap data={this.state.heatMapData} container='heat-map-runs' xAxis={this.state.options} yAxis={this.state.seasons} series={this.heatMapSeries}/>
+   <HeatMap data={this.state.heatMapData} container='heat-map-runs' xAxis={this.state.options} yAxis={this.state.seasons} series={this.state.heatMapSeries}/>
    </div> 
     </div >
   )
