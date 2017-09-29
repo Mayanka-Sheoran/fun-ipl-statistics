@@ -1,7 +1,7 @@
 import React from 'react'
 import BarChart from '../Bar-Chart/Bar-Chart'
 import LineChart from '../Line-Chart/Line-Chart'
-import PieChart from '../Pie-Chart/Pie-Chart'
+import ColumnChart from '../Column-Chart/Column-Chart'
 import COLORS from 'constants/colors.json'
 import classes from './Team-Performance-Trend.scss'
 import matches from '../../fixtures/matches.json'
@@ -41,15 +41,15 @@ class TeamPerformanceTrend extends React.Component {
       options: _.uniq(_.map(matches, 'team1')),
       seasons: _.uniq(_.map(matches, 'season')),
       teamTrajectoryData: [], 
-      pieChartData: {
+      columnChartData: {
         title: '% of Matches won batting first',
         name: 'Bat First'
       },
-      pieChartSeriesBatFirst: [],
-      pieChartSeriesHomeGround: [],
-      newpieChartSeriesHomeGround: [],
-      newpieChartSeriesBatFirst: [],
-      pieChartDataHomeGround : {
+      columnChartSeriesBatFirst: [],
+      columnChartSeriesHomeGround: [],
+      newcolumnChartSeriesHomeGround: [],
+      newcolumnChartSeriesBatFirst: [],
+      columnChartDataHomeGround : {
         title: '% of Matches won on home ground',
         name: 'Home ground wins'
       },
@@ -57,9 +57,12 @@ class TeamPerformanceTrend extends React.Component {
         name: 'Average runs per season',
         title: 'Average runs per season'
       },
-      heatMapSeries: []
+      heatMapSeries: [],
+      xAxisCategories: []
     }
     
+  }
+  componentWillMount(){
     this.state.options.map(function(team) {
       this.state.seasons.map(function(year) {
         const dataArray = []
@@ -83,10 +86,10 @@ class TeamPerformanceTrend extends React.Component {
       }, this)
     }, this)
 
-
-    this.state.options.map(function(item) {
       const newOption = {}
-      newOption.name = item
+      newOption.name = 'Teams'
+      newOption.data = []
+    this.state.options.map(function(item) {  
       const totalMatchesWon = matches.reduce(function (n, match) {
         return n + (match.winner == item)
       }, 0)
@@ -94,16 +97,15 @@ class TeamPerformanceTrend extends React.Component {
         return n + ((match.winner == item && match['toss_winner'] == item && match['toss_decision'] == 'bat')|| (match.winner == item && match['toss_winner'] !== item && match['toss_decision'] == 'field'))
       }, 0)
       const percentage = (matchesWonBatFirst/totalMatchesWon)*100
-      newOption.y = percentage
-      this.state.pieChartSeriesBatFirst.push(newOption)
+      newOption.data.push(parseInt(percentage))    
     }, this)
+    this.state.columnChartSeriesBatFirst.push(newOption)
+    this.state.xAxisCategories = this.state.options
 
-    this.state.pieChartSeriesBatFirst[0].sliced=true
-    this.state.pieChartSeriesBatFirst[0].selected=true
-
+      const newOptionHomeGround = {}
+      newOptionHomeGround.name = 'Teams'
+      newOptionHomeGround.data = []
      this.state.options.map(function(item) {
-      const newOption = {}
-      newOption.name = item
       const totalMatchesWon = matches.reduce(function (n, match) {
         return n + (match.winner == item)
       }, 0)
@@ -111,12 +113,10 @@ class TeamPerformanceTrend extends React.Component {
         return n + (match.winner == item && match.city == homeGrounds[item])
       }, 0)
       const percentage = (matchesWonHomeGround/totalMatchesWon)*100
-      newOption.y = percentage
-      this.state.pieChartSeriesHomeGround.push(newOption)
+      newOptionHomeGround.data.push(parseInt(percentage))    
     }, this)
+      this.state.columnChartSeriesHomeGround.push(newOptionHomeGround)
 
-    this.state.pieChartSeriesHomeGround[0].sliced=true
-    this.state.pieChartSeriesHomeGround[0].selected=true
     this.state.options.map(function(item) {
       const newOption = {}
       newOption.label = item
@@ -155,10 +155,11 @@ class TeamPerformanceTrend extends React.Component {
       const oneTeamData = []
       oneTeamData.push(_.find(this.state.teamTrajectoryData, {name:item.target.value})) 
 
-      const newPieChartSeriesHomeGround = []
+      const newcolumnChartSeriesHomeGround = []
+      const newOption = {}
+      newOption.name = 'Season'
+      newOption.data = []
       this.state.seasons.map(function(year) {
-        const newOption = {}
-        newOption.name = year
         const totalMatchesWon = matches.reduce(function (n, match) {
           return n + (match.winner == item.target.value && match.season == year)
         }, 0)
@@ -166,14 +167,16 @@ class TeamPerformanceTrend extends React.Component {
           return n + (match.winner == item.target.value && match.season == year && match.city == homeGrounds[item.target.value])
         }, 0)
         const percentage = (matchesWonHomeGround/totalMatchesWon)*100
-        newOption.y = percentage
-        newPieChartSeriesHomeGround.push(newOption)
+        newOption.data.push(parseInt(percentage))
        }, this)
+        newcolumnChartSeriesHomeGround.push(newOption)
 
-      const newpieChartSeriesBatFirst = []
+      const newcolumnChartSeriesBatFirst = []
+      const newOptionHomeGround = {}
+      newOptionHomeGround.name = 'Season'
+      newOptionHomeGround.data = []
       this.state.seasons.map(function(year) {
-        const newOption = {}
-        newOption.name = year
+        
         const totalMatchesWon = matches.reduce(function (n, match) {
           return n + (match.winner == item.target.value && match.season == year)
         }, 0)
@@ -181,11 +184,12 @@ class TeamPerformanceTrend extends React.Component {
           return n + ((match.winner == item.target.value && match['toss_winner'] == item.target.value && match['toss_decision'] == 'bat' && match.season == year)|| (match.winner == item.target.value && match['toss_winner'] !== item.target.value && match['toss_decision'] == 'field' && match.season == year))
         }, 0)
         const percentage = (matchesWonBatFirst/totalMatchesWon)*100
-        newOption.y = percentage
-        newpieChartSeriesBatFirst.push(newOption)
+        newOptionHomeGround.data.push(parseInt(percentage))
+        
        }, this)
+      newcolumnChartSeriesBatFirst.push(newOptionHomeGround)
 
-      this.setState({series: _.map(oneTeamData, _.partial(_.pick, _, ['name', 'data'])) , newpieChartSeriesHomeGround: newPieChartSeriesHomeGround, newpieChartSeriesBatFirst: newpieChartSeriesBatFirst})
+      this.setState({series: _.map(oneTeamData, _.partial(_.pick, _, ['name', 'data'])) , newcolumnChartSeriesHomeGround: newcolumnChartSeriesHomeGround, newcolumnChartSeriesBatFirst: newcolumnChartSeriesBatFirst, xAxisCategories: this.state.seasons})
     }
     else{
       this.setState({series: this.state.teamTrajectoryData})
@@ -200,9 +204,9 @@ class TeamPerformanceTrend extends React.Component {
    <div >
     <Dropdown optionList = { this.state.teams } onChange={this.getSelectedTeam}/>
      <div className = 'flex performace-chart pl1'>
-    <PieChart data={this.state.pieChartData} series={this.state.selectedTeam == 'All' ? this.state.pieChartSeriesBatFirst: this.state.newpieChartSeriesBatFirst} container='containerPie'/>
+    <ColumnChart data={this.state.columnChartData} xAxisCategories={this.state.xAxisCategories} series={this.state.selectedTeam == 'All' ? this.state.columnChartSeriesBatFirst: this.state.newcolumnChartSeriesBatFirst} container='containercolumn'/>
    </div> 
-   <div className = 'flex performace-chart pl1'><PieChart data={this.state.pieChartDataHomeGround} series={this.state.selectedTeam == 'All' ? this.state.pieChartSeriesHomeGround : this.state.newpieChartSeriesHomeGround} container='containerPie2'/></div>
+   <div className = 'flex performace-chart pl1'><ColumnChart xAxisCategories={this.state.xAxisCategories} data={this.state.columnChartDataHomeGround} series={this.state.selectedTeam == 'All' ? this.state.columnChartSeriesHomeGround : this.state.newcolumnChartSeriesHomeGround} container='containercolumn2'/></div>
    </div>
    <HeatMap data={this.state.heatMapData} container='heat-map-runs' xAxis={this.state.options} yAxis={this.state.seasons} series={this.state.heatMapSeries}/>
    </div> 
