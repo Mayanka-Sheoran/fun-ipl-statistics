@@ -33,12 +33,18 @@ class PlayerPerformanceTrend extends React.Component {
   constructor(props) {
     super(props)
     this.getSelectedYear = this.getSelectedYear.bind(this)
-    this.state = {
+    this.getInitialState = this.getInitialState.bind(this)
+    this.getSelectedPlayer = this.getSelectedPlayer.bind(this)
+    this.getInitialState()
+  }
+
+  getInitialState(){
+      this.state = {
       series: [],
       teams: [{'label': 'All', value: 'All'}],
       options: _.uniq(_.map(matches, 'team1')),
       seasons: _.uniq(_.map(matches, 'season')),
-      seasonsOptions: [],
+      seasonsOptions: [{'label': 'All', value: 'All'}],
       uniqPlayers: [],
       players: [],
       heatMapData: {
@@ -47,12 +53,12 @@ class PlayerPerformanceTrend extends React.Component {
       },
       heatMapSeries: [],
       allPlayers: [],
-      selectedPlayer : 'V Kohli',
+      selectedPlayer : 'LMP Simmons',
       runsBarSeries : [],
       runsBarData : {
         title: 'Runs Scored in every season'
       },
-      wicketsBarSeries: [],
+      wicketBarSeries: [],
       wicketsBarData : {
         title: 'Wickets taken in every season'
       },
@@ -61,7 +67,8 @@ class PlayerPerformanceTrend extends React.Component {
       dotsGivenPercentage:0,
       extrasGivenPercentage : 0,
       selectedYear: '',
-      xAxis: []
+      xAxis: [],
+      xAxisWickets: []
     }
   }
   componentWillMount(){
@@ -141,7 +148,7 @@ class PlayerPerformanceTrend extends React.Component {
     this.state.dotsGivenPercentage = Math.round((_.sum(dotsgivenArray)/_.sum(totalBowledArray))*100)
     this.state.runsBarSeries.push(runsBarSeries)
     this.state.xAxis = this.state.seasons
-    this.state.xAxisWicketss = this.state.seasons
+    this.state.xAxisWickets = this.state.seasons
 
     const wicketBarSeries = {}
     wicketBarSeries.name = 'Wickets'
@@ -151,91 +158,103 @@ class PlayerPerformanceTrend extends React.Component {
        wicketBarSeries.data.push(totalWicketsTook)
     }, this)
 
-    this.state.wicketsBarSeries.push(wicketBarSeries)
+    this.state.wicketBarSeries.push(wicketBarSeries)
   }
 
   getSelectedYear(item){
     this.setState({ selectedYear: item.target.value })
-    const selectedPlayer = this.state.selectedPlayer
-    const runsBarSeries = {}
-    const wicketBarSeries  = {}
-    runsBarSeries.name = 'Runs'
-    runsBarSeries.data = []
-    const wicketsBarSeries = {}
-    wicketsBarSeries.name = 'Wickets'
-    wicketsBarSeries.data = []
-    const matchOpponents = []
-    const newRunsBarSeries = []
-    const matchOpponentsBowling = []
-    const newWicketsBarSeries = []
-    const year = item.target.value
-    const deliveresPlayedByPlayer = _.filter(mapping[year], function(match) { 
-        return match['batsman'] == selectedPlayer
-    });
-    const matchGroups = _.groupBy(deliveresPlayedByPlayer, 'match_id')
-    // matchOpponents.push(matchGroups[Object.keys(matchGroups)[0]]['bowling_team']
-    _.map(matchGroups, function(item){
-       matchOpponents.push(item[0]['bowling_team'])
-       const runsMadeByPlayerInMatch = item.reduce(function (n, match) {
-        return n + (parseInt(match['total_runs']))
-      }, 0)
-       runsBarSeries.data.push(runsMadeByPlayerInMatch)
-    })
-    newRunsBarSeries.push(runsBarSeries)
+    if(item.target.value!='All'){
 
-    _.map(matchGroups, function(item){
-      matchOpponentsBowling.push(item[0]['batting_team'])
-      const wicketsTakenByPlayerInMatch = _.filter(mapping[year], function(match) { if (match['player_dismissed']&& match['dismissal_kind']!=='run out') return match }).length
-      wicketsBarSeries.data.push(wicketsTakenByPlayerInMatch)
-    })
+      const selectedPlayer = this.state.selectedPlayer
+      const runsBarSeries = {}
+      const wicketBarSeries  = {}
+      runsBarSeries.name = 'Runs'
+      runsBarSeries.data = []
+      wicketBarSeries.name = 'Wickets'
+      wicketBarSeries.data = []
+      const matchOpponents = []
+      const newRunsBarSeries = []
+      const matchOpponentsBowling = []
+      const newWicketBarSeries = []
+      const year = item.target.value
+      const deliveresPlayedByPlayer = _.filter(mapping[year], function(match) { 
+          return match['batsman'] == selectedPlayer
+      });
+      const deliveresBowledByPlayer = _.filter(mapping[year], function(match) { 
+          return match['bowler'] == selectedPlayer
+      });
     
-    newWicketsBarSeries.push(wicketBarSeries)
+      _.map(_.groupBy(deliveresPlayedByPlayer, 'match_id'), function(item){
+         matchOpponents.push(item[0]['bowling_team'])
+         const runsMadeByPlayerInMatch = item.reduce(function (n, match) {
+          return n + (parseInt(match['total_runs']))
+        }, 0)
+         runsBarSeries.data.push(runsMadeByPlayerInMatch)
+      })
+      newRunsBarSeries.push(runsBarSeries)
 
-    const totalRunsMade = mapping[year].reduce(function(n, match) {
-      return n + (match.batsman == selectedPlayer ? parseInt(match['total_runs']) : 0)
-    }, 0)
-    const totalBoundries = mapping[year].reduce(function(n, match) {
-      return n + (match.batsman == selectedPlayer && (match['batsman_runs'] == '4' || match['batsman_runs'] == '6') ? parseInt(match['batsman_runs']) : 0)
-    }, 0)
-    const totalDots = mapping[year].reduce(function(n, match) {
-      return n + (match.batsman == selectedPlayer && (match['batsman_runs'] == '0'))
-    }, 0)
-    const totalBallsFaced = mapping[year].reduce(function(n, match) {
-      return n + (match.batsman == selectedPlayer)
-    }, 0)
-    const dotsGiven = mapping[year].reduce(function(n, match) {
-      return n + (match.bowler == selectedPlayer && (match['total_runs'] == '0'))
-    }, 0)
-    const totalBowled = mapping[year].reduce(function(n, match) {
-      return n + (match.bowler == selectedPlayer)
-    }, 0)
-    const extrasGiven = mapping[year].reduce(function(n, match) {
-      return n + (match.bowler == selectedPlayer && (match['extra_runs'] !== '0') ? parseInt(match['extra_runs']) : 0)
-    }, 0)
-    const totalRunsGiven = mapping[year].reduce(function(n, match) {
-      return n + (match.batsman == selectedPlayer ? parseInt(match['total_runs']) : 0)
-    }, 0)
+      _.map(_.groupBy(deliveresBowledByPlayer, 'match_id'), function(item){
+        matchOpponentsBowling.push(item[0]['batting_team'])
+         const wicketsTakenByPlayerInMatch = _.filter(item, function(match) { if (match['player_dismissed']&& match['dismissal_kind']!=='run out') return match }).length || 0
+         console.log(wicketsTakenByPlayerInMatch)
+        wicketBarSeries.data.push(wicketsTakenByPlayerInMatch)
+      })
+      
+      newWicketBarSeries.push(wicketBarSeries)
 
-    this.setState({
-      dotsPercentage: Math.round((totalDots / totalBallsFaced) * 100),
-      boundaryPercentage: Math.round((totalBoundries / totalRunsMade) * 100),
-      extrasGivenPercentage: Math.round((extrasGiven / totalRunsGiven) * 100),
-      dotsGivenPercentage: Math.round((dotsGiven / totalBowled) * 100),
-      xAxis: matchOpponents,
-      xAxisWickets: matchOpponentsBowling,
-      runsBarSeries: newRunsBarSeries,
-      wicketBarSeries: newWicketsBarSeries
-    })
+      const totalRunsMade = mapping[year].reduce(function(n, match) {
+        return n + (match.batsman == selectedPlayer ? parseInt(match['total_runs']) : 0)
+      }, 0)
+      const totalBoundries = mapping[year].reduce(function(n, match) {
+        return n + (match.batsman == selectedPlayer && (match['batsman_runs'] == '4' || match['batsman_runs'] == '6') ? parseInt(match['batsman_runs']) : 0)
+      }, 0)
+      const totalDots = mapping[year].reduce(function(n, match) {
+        return n + (match.batsman == selectedPlayer && (match['batsman_runs'] == '0'))
+      }, 0)
+      const totalBallsFaced = mapping[year].reduce(function(n, match) {
+        return n + (match.batsman == selectedPlayer)
+      }, 0)
+      const dotsGiven = mapping[year].reduce(function(n, match) {
+        return n + (match.bowler == selectedPlayer && (match['total_runs'] == '0'))
+      }, 0)
+      const totalBowled = mapping[year].reduce(function(n, match) {
+        return n + (match.bowler == selectedPlayer)
+      }, 0)
+      const extrasGiven = mapping[year].reduce(function(n, match) {
+        return n + (match.bowler == selectedPlayer && (match['extra_runs'] !== '0') ? parseInt(match['extra_runs']) : 0)
+      }, 0)
+      const totalRunsGiven = mapping[year].reduce(function(n, match) {
+        return n + (match.batsman == selectedPlayer ? parseInt(match['total_runs']) : 0)
+      }, 0)
 
-
+      this.setState({
+        dotsPercentage: Math.round((totalDots / totalBallsFaced) * 100),
+        boundaryPercentage: Math.round((totalBoundries / totalRunsMade) * 100),
+        extrasGivenPercentage: Math.round((extrasGiven / totalRunsGiven) * 100),
+        dotsGivenPercentage: Math.round((dotsGiven / totalBowled) * 100),
+        xAxis: matchOpponents,
+        xAxisWickets: matchOpponentsBowling,
+        runsBarSeries: newRunsBarSeries,
+        wicketBarSeries: newWicketBarSeries
+      })
+    }
+    else {
+      this.getInitialState()
+      this.componentWillMount()
+    }
+  }
+  getSelectedPlayer(item){
+    this.setState({selectedPlayer: item.target.value})
+    this.getInitialState()
+    this.componentWillMount()
   }
   render () {
     console.log(this.state)
   return ( <div className = { classes.container + ' full-size' } >
-    <Dropdown optionList = { this.state.players }/>
+    <Dropdown optionList = { this.state.players } onChange={this.getSelectedPlayer}/>
     <Dropdown optionList = { this.state.seasonsOptions } onChange={this.getSelectedYear}/>
     <BarChart container='runs' series={this.state.runsBarSeries} xAxis={this.state.xAxis} data={this.state.runsBarData}/>
-    <BarChart container='wicktes' series={this.state.wicketsBarSeries} xAxis={this.state.xAxisWickets} data={this.state.wicketsBarData}/>
+    <BarChart container='wicktes' series={this.state.wicketBarSeries} xAxis={this.state.xAxisWickets} data={this.state.wicketsBarData}/>
     <div>{this.state.boundaryPercentage || 0}% boundaries</div><span>{this.state.dotsPercentage || 0}% dots</span>
     <div>{this.state.extrasGivenPercentage || 0}% extras</div><span>{this.state.dotsGivenPercentage || 0}% dots bowled</span>
     </div >
