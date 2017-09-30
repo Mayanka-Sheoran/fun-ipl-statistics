@@ -41,10 +41,23 @@
     justify-content: center;
     padding: 20px 0;
   }
-  .whiteLogo{
+  .whiteLogo {
     height: 160px;
     margin-right: 13px;
     width: 110px;
   }
+}
 
+:global {
+  .react-tabs__tab--selected {
+    border: none!important;
+    border-radius: 5px !important;
+    margin: 10px !important;
+    padding: 15px;
+    background-color: $theme_blue !important;
+    color: $theme_white !important;
+  }
+  .react-tabs__tab--list {
+    border: none !important;
+  }
 }

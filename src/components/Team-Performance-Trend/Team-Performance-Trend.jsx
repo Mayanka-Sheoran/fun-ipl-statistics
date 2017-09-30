@@ -34,6 +34,8 @@ import Pune from '../../assets/PWI logo.png'
 import Sunrisers from '../../assets/SH logo.jpg'
 import Supergiants from '../../assets/RSP logo.png'
 import Lions from '../../assets/GL logo.png'
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
+import 'react-tabs/style/react-tabs.css'
 
 const imageMapping = {
    "All Teams": logo,
@@ -231,19 +233,34 @@ class TeamPerformanceTrend extends React.Component {
           <div className={classes.selectText}>Select a team</div>
           <Dropdown optionList={this.state.teams} onChange={this.getSelectedTeam} />
         </div>  
-       </div> 
-      
+       </div>     
       </Card>
-      <div className='flex performace-chart pl1' >
+    <Tabs>
+      <TabList>
+        <Tab>Team Trajectory</Tab>
+        <Tab>Bat First Wins</Tab>
+        <Tab>Home Ground Wins</Tab>
+        <Tab>Average Runs</Tab>
+      </TabList>
+
+      <TabPanel>
+        <div className='flex performace-chart pl1' >
         <LineChart data={this.data} series={this.state.series.length > 0 ? this.state.series : this.state.teamTrajectoryData} />
-        <div >
-          <div className='flex performace-chart pl1'>
-            <ColumnChart data={this.state.columnChartData} xAxisCategories={this.state.xAxisCategories} series={this.state.selectedTeam == 'All Teams' ? this.state.columnChartSeriesBatFirst : this.state.newcolumnChartSeriesBatFirst} container='containercolumn' />
-          </div>
-          <div className='flex performace-chart pl1'><ColumnChart xAxisCategories={this.state.xAxisCategories} data={this.state.columnChartDataHomeGround} series={this.state.selectedTeam == 'All Teams' ? this.state.columnChartSeriesHomeGround : this.state.newcolumnChartSeriesHomeGround} container='containercolumn2' /></div>
         </div>
-        <HeatMap data={this.state.heatMapData} container='heat-map-runs' xAxis={this.state.options} yAxis={this.state.seasons} series={this.state.heatMapSeries} />
-      </div>
+      </TabPanel>
+      <TabPanel>
+        <div className='flex performace-chart pl1'>
+          <ColumnChart data={this.state.columnChartData} xAxisCategories={this.state.xAxisCategories} series={this.state.selectedTeam == 'All Teams' ? this.state.columnChartSeriesBatFirst : this.state.newcolumnChartSeriesBatFirst} container='containercolumn' />
+        </div>
+      </TabPanel>
+      <TabPanel>
+         <div className='flex performace-chart pl1'><ColumnChart xAxisCategories={this.state.xAxisCategories} data={this.state.columnChartDataHomeGround} series={this.state.selectedTeam == 'All Teams' ? this.state.columnChartSeriesHomeGround : this.state.newcolumnChartSeriesHomeGround} container='containercolumn2' /></div>
+      </TabPanel>
+      <TabPanel>
+         <HeatMap data={this.state.heatMapData} container='heat-map-runs' xAxis={this.state.options} yAxis={this.state.seasons} series={this.state.heatMapSeries} />
+      </TabPanel>
+
+    </Tabs>   
     </div >
     )
   }
