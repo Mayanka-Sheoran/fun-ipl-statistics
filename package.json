@@ -23,7 +23,6 @@
     "codecov": "cat coverage/*/lcov.info | codecov"
   },
   "pre-push": [
-    "test",
     "lint"
   ],
   "betterScripts": {

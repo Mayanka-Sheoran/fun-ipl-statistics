@@ -9,7 +9,7 @@ const Carousel = () => {
   </div>))
   return (
     <div className={classes.container + ' p1'}>
-      <NukaCarousel autoplay={true} wrapAround={true}>
+      <NukaCarousel autoplay wrapAround>
         {HighlightList}
       </NukaCarousel>
     </div>

@@ -2,16 +2,16 @@ import React from 'react'
 import Highcharts from 'highcharts'
 
 class BarChart extends React.Component {
-  componentDidMount() {
+  componentDidMount () {
     const { data, series, xAxis, container } = this.props
     this.initializeChart(data, series, xAxis, container)
   }
-  componentDidUpdate() {
+  componentDidUpdate () {
     const { data, series, xAxis, container } = this.props
     this.initializeChart(data, series, xAxis, container)
   }
-  render() {
-    return ( < div id = { this.props.container } className = 'scroll' / > )
+  render () {
+    return (< div id={this.props.container} className='scroll' / >)
   }
   initializeChart = (data, series, xAxis, container) => {
     Highcharts.chart(container, {
@@ -29,8 +29,8 @@ class BarChart extends React.Component {
         tickInterval: 1
       },
       yAxis: {
-          tickPixelInterval: 100
-      }, 
+        tickPixelInterval: 100
+      },
       plotOptions: {
         bar: {
           dataLabels: {

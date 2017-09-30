@@ -3,7 +3,7 @@ import Highcharts from 'highcharts'
 import Highmaps from 'highcharts/Highmaps.src'
 
 class HeatMap extends React.Component {
-  componentDidMount() {
+  componentDidMount () {
     const { data, series, container, xAxis, yAxis } = this.props
     this.initializeChart(data, series, container, xAxis, yAxis)
   }
@@ -11,9 +11,9 @@ class HeatMap extends React.Component {
     const { data, series, container, xAxis, yAxis } = this.props
     this.initializeChart(data, series, container, xAxis, yAxis)
   }
-  render() {
-    return ( < div id = {this.props.container}
-      className = 'scroll' / > )
+  render () {
+    return (< div id={this.props.container}
+      className='scroll' / >)
   }
   initializeChart = (data, series, container, xAxis, yAxis) => {
     Highmaps.chart(container, {
@@ -43,7 +43,7 @@ class HeatMap extends React.Component {
         minColor: '#FFFFFF',
         maxColor: Highcharts.getOptions().colors[0]
       },
-    
+
       legend: {
         align: 'right',
         layout: 'vertical',
@@ -63,7 +63,6 @@ class HeatMap extends React.Component {
         }
       }]
     })
-
   }
 }
 

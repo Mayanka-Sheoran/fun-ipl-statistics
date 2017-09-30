@@ -2,10 +2,49 @@
 
 .container {
   background-color: $theme_white;
-  :global {
+   :global {
     .performace-chart {
       align-items: center;
       padding-top: 10px;
     }
   }
+}
+
+.teamSelectorContainer {
+  display: flex;
+  justify-content: left;
+  padding: 20px 40px 20px 40px;
+}
+
+.whiteLogo {
+  height: 160px;
+  margin-right: 30px;
+}
+
+.dropDownContainer {
+  text-align: end;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.selectText {
+  color: white;
+  font-size: 20px;
+  text-align: start;
+  padding: 10px;
+}
+
+@media screen and (max-width: $mobile_breakpoint) {
+  .teamSelectorContainer {
+    display: flex;
+    justify-content: center;
+    padding: 20px 0;
+  }
+  .whiteLogo{
+    height: 160px;
+    margin-right: 13px;
+    width: 110px;
+  }
+
 }

@@ -1,8 +1,12 @@
 @import '../../styles/variables';
 
 .selected {
-   background: url('../../assets/down-arrow.svg') no-repeat right center;
-   width: 130px;
-   font-size: $font-medium;
-   color: $theme_text_grey;
+  background: url('../../assets/down-arrow.svg') no-repeat right center;
+  font-size: $font-medium;
+  width: 215px;
+  font-size: 15px;
+  color: $theme_white;
+  height: 50px;
+  border: solid $theme_white 1px;
+  padding: 8px;
 }

@@ -2,7 +2,7 @@ import React from 'react'
 import Highcharts from 'highcharts'
 
 class PieChart extends React.Component {
-  componentDidMount() {
+  componentDidMount () {
     const { data, series, container } = this.props
     this.initializeChart(data, series, container)
   }
@@ -10,9 +10,9 @@ class PieChart extends React.Component {
     const { data, series, container } = this.props
     this.initializeChart(data, series, container)
   }
-  render() {
-    return ( < div id = {this.props.container}
-      className = 'scroll' / > )
+  render () {
+    return (< div id={this.props.container}
+      className='scroll' / >)
   }
   initializeChart = (data, series, container) => {
     Highcharts.chart(container, {

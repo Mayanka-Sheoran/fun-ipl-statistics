@@ -10,16 +10,19 @@ const image = {
   ground: ground
 }
 const Card = ({cardTitle, children, cardType, cardDetails}) => (
- <div> 
-  {cardType === 'carousal' && <div className={classes.container + ' full-width '}>
-    <div>{children}</div>
-  </div>}
-  {cardType === 'tile' && <div className={classes.tileContainer}>
-    <div className={classes.tile}><img className={classes.tileImages} src={image[cardDetails]}/>
-     <div className={classes.cardText}>{cardTitle}</div>
-    </div>
-  </div>} 
- </div> )
+  <div>
+    {cardType === 'carousal' && <div className={classes.container + ' full-width '}>
+      <div>{children}</div>
+    </div>}
+    {cardType === 'selector' && <div className={classes.selectorCardContainer + ' full-width '}>
+      <div>{children}</div>
+    </div>}
+    {cardType === 'tile' && <div className={classes.tileContainer}>
+      <div className={classes.tile}><img className={classes.tileImages} src={image[cardDetails]} />
+        <div className={classes.cardText}>{cardTitle}</div>
+      </div>
+    </div>}
+  </div>)
 
 Card.propTypes = {
   cardType: React.PropTypes.string,

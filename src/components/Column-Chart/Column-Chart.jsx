@@ -17,43 +17,43 @@ class ColumnChart extends React.Component {
   }
   initializeChart = (data, series, xAxisCategories, container) => {
     Highcharts.chart(container, {
-       chart: {
+      chart: {
         type: 'column'
-    },
-    title: {
+      },
+      title: {
         text: data.title
-    },
-    xAxis: {
+      },
+      xAxis: {
         categories: xAxisCategories,
         crosshair: true,
         title: {
-        text: series[0].name
-      }
-    },
-    tooltip: {
-      valueSuffix: '%'
-    },
-    yAxis: {
+          text: series[0].name
+        }
+      },
+      tooltip: {
+        valueSuffix: '%'
+      },
+      yAxis: {
         min: 0,
         visible: false
-    },
-    credits: {
-      enabled: false
-    },
-    plotOptions: {
+      },
+      credits: {
+        enabled: false
+      },
+      plotOptions: {
         column: {
-            pointPadding: 0.2,
-            borderWidth: 0,
-            dataLabels: {
-                enabled: true,
-                format: "{y}%"
-            }
+          pointPadding: 0.2,
+          borderWidth: 0,
+          dataLabels: {
+            enabled: true,
+            format: '{y}%'
+          }
         }
-    },
-    legend: {
-      enabled: false
-    },
-    series: series
+      },
+      legend: {
+        enabled: false
+      },
+      series: series
     })
   }
 }

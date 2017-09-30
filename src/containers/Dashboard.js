@@ -8,7 +8,7 @@ const getData = createAction('GET_METADATA')
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    getData: bindActionCreators(getData, dispatch),
+    getData: bindActionCreators(getData, dispatch)
   }
 }
 

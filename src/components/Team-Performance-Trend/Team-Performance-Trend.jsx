@@ -17,7 +17,40 @@ import deliveries2013 from '../../fixtures/2013.json'
 import deliveries2014 from '../../fixtures/2014.json'
 import deliveries2015 from '../../fixtures/2015.json'
 import deliveries2016 from '../../fixtures/2016.json'
+import Card from '../Card/Card'
+import Carousel from '../Carousel/Carousel'
+import imageMappings from '../../fixtures/imageMap.json'
+import logo from '../../assets/white-ipl-logo.jpg'
+import Kolkata from '../../assets/KKR logo.png'
+import Chennai from '../../assets/CSK logo.png'
+import Rajasthan from '../../assets/RR logo.png'
+import Mumbai from '../../assets/MI logo.png'
+import Deccan from '../../assets/DC logo.png'
+import Kings from '../../assets/KXIP logo.png'
+import Royal from '../../assets/RBC logo.png'
+import Delhi from '../../assets/DD logo.png'
+import Kochi from '../../assets/KTK logo.png'
+import Pune from '../../assets/PWI logo.png'
+import Sunrisers from '../../assets/SH logo.jpg'
+import Supergiants from '../../assets/RSP logo.png'
+import Lions from '../../assets/GL logo.png'
 
+const imageMapping = {
+   "All Teams": logo,
+   "Kolkata Knight Riders":  Kolkata,
+   "Chennai Super Kings": Chennai,
+   "Rajasthan Royals": Rajasthan,
+   "Mumbai Indians": Mumbai,
+   "Deccan Chargers": Deccan,
+   "Kings XI Punjab": Kings,
+   "Royal Challengers Bangalore" :Royal,
+   "Delhi Daredevils": Delhi,
+   "Kochi Tuskers Kerala": Kochi,
+   "Pune Warriors": Pune,
+   "Sunrisers Hyderabad": Sunrisers,
+   "Rising Pune Supergiants": Supergiants,
+   "Gujarat Lions" : Lions
+}
 const mapping = {
   2008: deliveries2008,
   2009: deliveries2009,
@@ -30,16 +63,16 @@ const mapping = {
   2016: deliveries2016
 }
 class TeamPerformanceTrend extends React.Component {
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.getSelectedTeam = this.getSelectedTeam.bind(this)
     this.state = {
-      selectedTeam : 'All',
+      selectedTeam: 'All Teams',
       series: [],
-      teams: [{'label': 'All', value: 'All'}],
+      teams: [{'label': 'All Teams', value: 'All Teams'}],
       options: _.uniq(_.map(matches, 'team1')),
       seasons: _.uniq(_.map(matches, 'season')),
-      teamTrajectoryData: [], 
+      teamTrajectoryData: [],
       columnChartData: {
         title: '% of Matches won batting first',
         name: 'Bat First'
@@ -48,7 +81,7 @@ class TeamPerformanceTrend extends React.Component {
       columnChartSeriesHomeGround: [],
       newcolumnChartSeriesHomeGround: [],
       newcolumnChartSeriesBatFirst: [],
-      columnChartDataHomeGround : {
+      columnChartDataHomeGround: {
         title: '% of Matches won on home ground',
         name: 'Home ground wins'
       },
@@ -59,159 +92,161 @@ class TeamPerformanceTrend extends React.Component {
       heatMapSeries: [],
       xAxisCategories: []
     }
-    
   }
-  componentWillMount(){
-    this.state.options.map(function(team) {
-      this.state.seasons.map(function(year) {
+  componentWillMount () {
+    this.state.options.map(function (team) {
+      this.state.seasons.map(function (year) {
         const dataArray = []
         const averageArray = []
         dataArray.push(this.state.options.indexOf(team))
         dataArray.push(this.state.seasons.indexOf(year))
-        const groupByMatch = _.groupBy(_.filter(mapping[year], function(match) { 
-            return match['batting_team'] == team
-         }), 'match_id')
-        _.map(groupByMatch, function(match){
-           const runsInOneMatch = match.reduce(function (n, match) {
+        const groupByMatch = _.groupBy(_.filter(mapping[year], function (match) {
+          return match['batting_team'] == team
+        }), 'match_id')
+        _.map(groupByMatch, function (match) {
+          const runsInOneMatch = match.reduce(function (n, match) {
             return n + (parseInt(match.total_runs))
           }, 0)
-           averageArray.push(runsInOneMatch)
+          averageArray.push(runsInOneMatch)
         })
-         const average = _.reduce(averageArray, function(memo, num) {
-          return memo + num;
+        const average = _.reduce(averageArray, function (memo, num) {
+          return memo + num
         }, 0) / (averageArray.length === 0 ? 1 : averageArray.length)
-         dataArray.push(Math.round(average))
-         this.state.heatMapSeries.push(dataArray)
+        dataArray.push(Math.round(average))
+        this.state.heatMapSeries.push(dataArray)
       }, this)
     }, this)
 
-      const newOption = {}
-      newOption.name = 'Teams'
-      newOption.data = []
-    this.state.options.map(function(item) {  
+    const newOption = {}
+    newOption.name = 'Teams'
+    newOption.data = []
+    this.state.options.map(function (item) {
       const totalMatchesWon = matches.reduce(function (n, match) {
         return n + (match.winner == item)
       }, 0)
       const matchesWonBatFirst = matches.reduce(function (n, match) {
-        return n + ((match.winner == item && match['toss_winner'] == item && match['toss_decision'] == 'bat')|| (match.winner == item && match['toss_winner'] !== item && match['toss_decision'] == 'field'))
+        return n + ((match.winner == item && match['toss_winner'] == item && match['toss_decision'] == 'bat') || (match.winner == item && match['toss_winner'] !== item && match['toss_decision'] == 'field'))
       }, 0)
-      const percentage = (matchesWonBatFirst/totalMatchesWon)*100
-      newOption.data.push(parseInt(percentage))    
+      const percentage = (matchesWonBatFirst / totalMatchesWon) * 100
+      newOption.data.push(parseInt(percentage))
     }, this)
     this.state.columnChartSeriesBatFirst.push(newOption)
     this.state.xAxisCategories = this.state.options
 
-      const newOptionHomeGround = {}
-      newOptionHomeGround.name = 'Teams'
-      newOptionHomeGround.data = []
-     this.state.options.map(function(item) {
+    const newOptionHomeGround = {}
+    newOptionHomeGround.name = 'Teams'
+    newOptionHomeGround.data = []
+    this.state.options.map(function (item) {
       const totalMatchesWon = matches.reduce(function (n, match) {
         return n + (match.winner == item)
       }, 0)
       const matchesWonHomeGround = matches.reduce(function (n, match) {
         return n + (match.winner == item && match.city == homeGrounds[item])
       }, 0)
-      const percentage = (matchesWonHomeGround/totalMatchesWon)*100
-      newOptionHomeGround.data.push(parseInt(percentage))    
+      const percentage = (matchesWonHomeGround / totalMatchesWon) * 100
+      newOptionHomeGround.data.push(parseInt(percentage))
     }, this)
-      this.state.columnChartSeriesHomeGround.push(newOptionHomeGround)
+    this.state.columnChartSeriesHomeGround.push(newOptionHomeGround)
 
-    this.state.options.map(function(item) {
+    this.state.options.map(function (item) {
       const newOption = {}
       newOption.label = item
       newOption.value = item
       this.state.teams.push(newOption)
     }, this)
-    
-    this.state.options.map(function(item) {
+
+    this.state.options.map(function (item) {
       const newOption = {}
       newOption.name = item
       newOption.data = []
-      this.state.seasons.forEach(function(season) {
+      this.state.seasons.forEach(function (season) {
         let numberOfMatchesWon = 0
-        _.forEach(matches, function(data) {
+        _.forEach(matches, function (data) {
           if (data.season == season && data.winner == item) {
             numberOfMatchesWon = numberOfMatchesWon + 1
           }
         })
         newOption.data.push(numberOfMatchesWon)
-     }, this)
+      }, this)
       this.state.teamTrajectoryData.push(newOption)
-    }, this)  
-    
-
+    }, this)
 
     this.data = {
-        height: 200,
-        title: 'Team Trajectory',
-        subtitle: '',
-        yAxisTitle: 'No of matches won'
+      height: 200,
+      title: 'Team Trajectory',
+      subtitle: '',
+      yAxisTitle: 'No of matches won'
     }
   }
-  getSelectedTeam(item){
+  getSelectedTeam (item) {
     this.setState({selectedTeam: item.target.value})
-     if(item.target.value !== 'All'){
+    if (item.target.value !== 'All Teams') {
       const oneTeamData = []
-      oneTeamData.push(_.find(this.state.teamTrajectoryData, {name:item.target.value})) 
+      oneTeamData.push(_.find(this.state.teamTrajectoryData, {name: item.target.value}))
 
       const newcolumnChartSeriesHomeGround = []
       const newOption = {}
       newOption.name = 'Season'
       newOption.data = []
-      this.state.seasons.map(function(year) {
+      this.state.seasons.map(function (year) {
         const totalMatchesWon = matches.reduce(function (n, match) {
           return n + (match.winner == item.target.value && match.season == year)
         }, 0)
         const matchesWonHomeGround = matches.reduce(function (n, match) {
           return n + (match.winner == item.target.value && match.season == year && match.city == homeGrounds[item.target.value])
         }, 0)
-        const percentage = (matchesWonHomeGround/totalMatchesWon)*100
+        const percentage = (matchesWonHomeGround / totalMatchesWon) * 100
         newOption.data.push(parseInt(percentage))
-       }, this)
-        newcolumnChartSeriesHomeGround.push(newOption)
+      }, this)
+      newcolumnChartSeriesHomeGround.push(newOption)
 
       const newcolumnChartSeriesBatFirst = []
       const newOptionHomeGround = {}
       newOptionHomeGround.name = 'Season'
       newOptionHomeGround.data = []
-      this.state.seasons.map(function(year) {
-        
+      this.state.seasons.map(function (year) {
         const totalMatchesWon = matches.reduce(function (n, match) {
           return n + (match.winner == item.target.value && match.season == year)
         }, 0)
         const matchesWonBatFirst = matches.reduce(function (n, match) {
-          return n + ((match.winner == item.target.value && match['toss_winner'] == item.target.value && match['toss_decision'] == 'bat' && match.season == year)|| (match.winner == item.target.value && match['toss_winner'] !== item.target.value && match['toss_decision'] == 'field' && match.season == year))
+          return n + ((match.winner == item.target.value && match['toss_winner'] == item.target.value && match['toss_decision'] == 'bat' && match.season == year) || (match.winner == item.target.value && match['toss_winner'] !== item.target.value && match['toss_decision'] == 'field' && match.season == year))
         }, 0)
-        const percentage = (matchesWonBatFirst/totalMatchesWon)*100
+        const percentage = (matchesWonBatFirst / totalMatchesWon) * 100
         newOptionHomeGround.data.push(parseInt(percentage))
-        
-       }, this)
+      }, this)
       newcolumnChartSeriesBatFirst.push(newOptionHomeGround)
 
-      this.setState({series: _.map(oneTeamData, _.partial(_.pick, _, ['name', 'data'])) , newcolumnChartSeriesHomeGround: newcolumnChartSeriesHomeGround, newcolumnChartSeriesBatFirst: newcolumnChartSeriesBatFirst, xAxisCategories: this.state.seasons})
-    }
-    else{
+      this.setState({series: _.map(oneTeamData, _.partial(_.pick, _, ['name', 'data'])), newcolumnChartSeriesHomeGround: newcolumnChartSeriesHomeGround, newcolumnChartSeriesBatFirst: newcolumnChartSeriesBatFirst, xAxisCategories: this.state.seasons})
+    } else {
       this.setState({series: this.state.teamTrajectoryData})
     }
-
   }
   render () {
     console.log(this.state)
-  return ( <div className = { classes.container + ' full-size' } >
-    <div className = 'flex performace-chart pl1' >
-    <LineChart data={this.data} series={this.state.series.length > 0 ? this.state.series : this.state.teamTrajectoryData}/>
-   <div >
-    <Dropdown optionList = { this.state.teams } onChange={this.getSelectedTeam}/>
-     <div className = 'flex performace-chart pl1'>
-    <ColumnChart data={this.state.columnChartData} xAxisCategories={this.state.xAxisCategories} series={this.state.selectedTeam == 'All' ? this.state.columnChartSeriesBatFirst: this.state.newcolumnChartSeriesBatFirst} container='containercolumn'/>
-   </div> 
-   <div className = 'flex performace-chart pl1'><ColumnChart xAxisCategories={this.state.xAxisCategories} data={this.state.columnChartDataHomeGround} series={this.state.selectedTeam == 'All' ? this.state.columnChartSeriesHomeGround : this.state.newcolumnChartSeriesHomeGround} container='containercolumn2'/></div>
-   </div>
-   <HeatMap data={this.state.heatMapData} container='heat-map-runs' xAxis={this.state.options} yAxis={this.state.seasons} series={this.state.heatMapSeries}/>
-   </div> 
+    return (<div className={classes.container + ' full-size'} >
+      <Card cardType='selector'>
+       <div className={classes.teamSelectorContainer}>
+        <img className={classes.whiteLogo} src={imageMapping[this.state.selectedTeam]}/>
+        <div className={classes.dropDownContainer}>
+          <div className={classes.selectText}>Select a team</div>
+          <Dropdown optionList={this.state.teams} onChange={this.getSelectedTeam} />
+        </div>  
+       </div> 
+      
+      </Card>
+      <div className='flex performace-chart pl1' >
+        <LineChart data={this.data} series={this.state.series.length > 0 ? this.state.series : this.state.teamTrajectoryData} />
+        <div >
+          <div className='flex performace-chart pl1'>
+            <ColumnChart data={this.state.columnChartData} xAxisCategories={this.state.xAxisCategories} series={this.state.selectedTeam == 'All Teams' ? this.state.columnChartSeriesBatFirst : this.state.newcolumnChartSeriesBatFirst} container='containercolumn' />
+          </div>
+          <div className='flex performace-chart pl1'><ColumnChart xAxisCategories={this.state.xAxisCategories} data={this.state.columnChartDataHomeGround} series={this.state.selectedTeam == 'All Teams' ? this.state.columnChartSeriesHomeGround : this.state.newcolumnChartSeriesHomeGround} container='containercolumn2' /></div>
+        </div>
+        <HeatMap data={this.state.heatMapData} container='heat-map-runs' xAxis={this.state.options} yAxis={this.state.seasons} series={this.state.heatMapSeries} />
+      </div>
     </div >
-  )
- }
+    )
+  }
 }
 
 TeamPerformanceTrend.propTypes = {
