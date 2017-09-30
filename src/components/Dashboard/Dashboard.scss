@@ -4,3 +4,13 @@
   background-color: $theme_background_grey;
   overflow-y: auto;
 }
+.bottomCardContainer{
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+@media screen and (max-width: $mobile_breakpoint) {
+  .bottomCardContainer{
+    display: block;
+  }
+}

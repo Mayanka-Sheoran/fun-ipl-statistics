@@ -11,7 +11,7 @@ $theme_red: #980411;
 $theme_orange:#F18625;
 $theme_purple:#7824EF;
 $theme_grey:#7F7F7F;
-$theme_blue:#23C7F1;
+$theme_blue:#293771;
 $theme_pink: #f9e2e3;
 
 
@@ -21,3 +21,6 @@ $font-xs: 10px;
 $font-small: 12px;
 $font-medium: 15px;
 $font-large: 18px;
+
+//mobile breakpoint for css
+$mobile-breakpoint: 768px;

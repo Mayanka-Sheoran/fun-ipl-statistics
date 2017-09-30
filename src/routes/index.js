@@ -3,7 +3,7 @@ import CoreLayout from '../layouts/CoreLayout/CoreLayout'
 import Dashboard from './Dashboard.js'
 import Team from './Team'
 import Player from './Player.js'
-
+import Ground from './Ground.js'
 /*  Note: Instead of using JSX, we recommend using react-router
     PlainRoute objects to build route definitions.   */
 
@@ -12,7 +12,7 @@ export const createRoutes = (store) => ({
   component: CoreLayout,
   indexRoute: Dashboard,
   childRoutes: [
-    Team, Player
+    Team, Player, Ground
   ]
 })
 

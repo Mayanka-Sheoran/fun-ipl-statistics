@@ -280,7 +280,7 @@ webpackConfig.module.loaders.push(
     loader: 'url?prefix=fonts/&name=[path][name].[ext]&limit=10000&mimetype=image/svg+xml'
   },
   {
-    test: /\.(png|jpg)$/,
+    test: /\.(png|jpg|jpeg)$/,
     loader: 'url?limit=8192'
   }
 )

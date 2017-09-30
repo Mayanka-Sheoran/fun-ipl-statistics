@@ -1,7 +1,6 @@
 import React from 'react'
 import BarChart from '../Bar-Chart/Bar-Chart'
 import LineChart from '../Line-Chart/Line-Chart'
-import COLORS from 'constants/colors.json'
 import classes from './Player-Performance-Trend.scss'
 import matches from '../../fixtures/matches.json'
 import Dropdown from '../Dropdown/Dropdown'
