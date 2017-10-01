@@ -72,7 +72,7 @@ HeatMap.propTypes = {
   data: React.PropTypes.object.isRequired,
   series: React.PropTypes.array.isRequired,
   xAxis: React.PropTypes.array,
-  yAxis: React.PropTypes.string,
+  yAxis: React.PropTypes.array,
   container: React.PropTypes.string.isRequired
 }
 export default HeatMap
