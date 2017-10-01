@@ -2,20 +2,10 @@ import React from 'react'
 import LineChart from '../Line-Chart/Line-Chart'
 import ColumnChart from '../Column-Chart/Column-Chart'
 import classes from './Team-Performance-Trend.scss'
-// import matches from '../../fixtures/matches.json'
 import Dropdown from '../Dropdown/Dropdown'
 import _ from 'lodash'
 import homeGrounds from '../../fixtures/Home-Ground.json'
 import HeatMap from '../Heat-Map/Heat-Map'
-import deliveries2008 from '../../fixtures/2008.json'
-import deliveries2009 from '../../fixtures/2009.json'
-import deliveries2010 from '../../fixtures/2010.json'
-import deliveries2011 from '../../fixtures/2011.json'
-import deliveries2012 from '../../fixtures/2012.json'
-import deliveries2013 from '../../fixtures/2013.json'
-import deliveries2014 from '../../fixtures/2014.json'
-import deliveries2015 from '../../fixtures/2015.json'
-import deliveries2016 from '../../fixtures/2016.json'
 import Card from '../Card/Card'
 import logo from '../../assets/white-ipl-logo.jpg'
 import Kolkata from '../../assets/KKR logo.png'
@@ -51,17 +41,7 @@ const imageMapping = {
   'Rising Pune Supergiants': Supergiants,
   'Gujarat Lions': Lions
 }
-const mapping = {
-  2008: deliveries2008,
-  2009: deliveries2009,
-  2010: deliveries2010,
-  2011: deliveries2011,
-  2012: deliveries2012,
-  2013: deliveries2013,
-  2014: deliveries2014,
-  2015: deliveries2015,
-  2016: deliveries2016
-}
+
 class TeamPerformanceTrend extends React.Component {
   constructor (props) {
     super(props)
@@ -70,8 +50,8 @@ class TeamPerformanceTrend extends React.Component {
       selectedTeam: 'All Teams',
       series: [],
       teams: [{'label': 'All Teams', value: 'All Teams'}],
-      options: _.uniq(_.map(this.props.matches.matches, 'team1')),
-      seasons: _.uniq(_.map(this.props.matches.matches, 'season')),
+      options: _.uniq(_.map(this.props.matches, 'team1')),
+      seasons: _.uniq(_.map(this.props.matches, 'season')),
       teamTrajectoryData: [],
       columnChartData: {
         title: '% of Matches won batting first',
@@ -92,6 +72,17 @@ class TeamPerformanceTrend extends React.Component {
       heatMapSeries: [],
       xAxisCategories: []
     }
+    this.mapping = {
+      2008: this.props['2008'],
+      2009: this.props['2009'],
+      2010: this.props['2010'],
+      2011: this.props['2011'],
+      2012: this.props['2012'],
+      2013: this.props['2013'],
+      2014: this.props['2014'],
+      2015: this.props['2015'],
+      2016: this.props['2016']
+    }
   }
   componentWillMount () {
     console.log(this.props)
@@ -101,7 +92,7 @@ class TeamPerformanceTrend extends React.Component {
         const averageArray = []
         dataArray.push(this.state.options.indexOf(team))
         dataArray.push(this.state.seasons.indexOf(year))
-        const groupByMatch = _.groupBy(_.filter(mapping[year], function (match) {
+        const groupByMatch = _.groupBy(_.filter(this.mapping[year], function (match) {
           return match['batting_team'] === team
         }), 'match_id')
         _.map(groupByMatch, function (match) {
@@ -122,10 +113,10 @@ class TeamPerformanceTrend extends React.Component {
     newOption.name = 'Teams'
     newOption.data = []
     this.state.options.map(function (item) {
-      const totalMatchesWon = this.props.matches.matches.reduce(function (n, match) {
+      const totalMatchesWon = this.props.matches.reduce(function (n, match) {
         return n + (match.winner === item)
       }, 0)
-      const matchesWonBatFirst = this.props.matches.matches.reduce(function (n, match) {
+      const matchesWonBatFirst = this.props.matches.reduce(function (n, match) {
         return n + ((match.winner === item && match['toss_winner'] === item &&
           match['toss_decision'] === 'bat') ||
         (match.winner === item && match['toss_winner'] !== item && match['toss_decision'] === 'field'))
@@ -140,10 +131,10 @@ class TeamPerformanceTrend extends React.Component {
     newOptionHomeGround.name = 'Teams'
     newOptionHomeGround.data = []
     this.state.options.map(function (item) {
-      const totalMatchesWon = this.props.matches.matches.reduce(function (n, match) {
+      const totalMatchesWon = this.props.matches.reduce(function (n, match) {
         return n + (match.winner === item)
       }, 0)
-      const matchesWonHomeGround = this.props.matches.matches.reduce(function (n, match) {
+      const matchesWonHomeGround = this.props.matches.reduce(function (n, match) {
         return n + (match.winner === item && match.city === homeGrounds[item])
       }, 0)
       const percentage = (matchesWonHomeGround / totalMatchesWon) * 100
@@ -164,7 +155,7 @@ class TeamPerformanceTrend extends React.Component {
       newOption.data = []
       this.state.seasons.forEach(function (season) {
         let numberOfMatchesWon = 0
-        _.forEach(this.props.matches.matches, function (data) {
+        _.forEach(this.props.matches, function (data) {
           if (data.season === season && data.winner === item) {
             numberOfMatchesWon = numberOfMatchesWon + 1
           }
@@ -192,10 +183,10 @@ class TeamPerformanceTrend extends React.Component {
       newOption.name = 'Season'
       newOption.data = []
       this.state.seasons.map(function (year) {
-        const totalMatchesWon = this.props.matches.matches.reduce(function (n, match) {
+        const totalMatchesWon = this.props.matches.reduce(function (n, match) {
           return n + (match.winner === item.target.value && match.season === year)
         }, 0)
-        const matchesWonHomeGround = this.props.matches.matches.reduce(function (n, match) {
+        const matchesWonHomeGround = this.props.matches.reduce(function (n, match) {
           return n + (match.winner === item.target.value &&
            match.season === year && match.city === homeGrounds[item.target.value])
         }, 0)
@@ -209,10 +200,10 @@ class TeamPerformanceTrend extends React.Component {
       newOptionHomeGround.name = 'Season'
       newOptionHomeGround.data = []
       this.state.seasons.map(function (year) {
-        const totalMatchesWon = this.props.matches.matches.reduce(function (n, match) {
+        const totalMatchesWon = this.props.matches.reduce(function (n, match) {
           return n + (match.winner === item.target.value && match.season === year)
         }, 0)
-        const matchesWonBatFirst = this.props.matches.matches.reduce(function (n, match) {
+        const matchesWonBatFirst = this.props.matches.reduce(function (n, match) {
           return n + ((match.winner === item.target.value &&
             match['toss_winner'] === item.target.value &&
              match['toss_decision'] === 'bat' &&
@@ -290,6 +281,17 @@ TeamPerformanceTrend.propTypes = {
   params: React.PropTypes.object.isRequired,
 }
 
-const mapStateToProps = (state) => ({ matches: state.commonData })
+const mapStateToProps = (state) => ({ 
+  matches: state.commonData.matches.data,
+  '2008': state.commonData['2008'].data,
+  '2009': state.commonData['2009'].data,
+  '2010': state.commonData['2010'].data,
+  '2011': state.commonData['2011'].data,
+  '2012': state.commonData['2012'].data,
+  '2013': state.commonData['2013'].data,
+  '2014': state.commonData['2014'].data,
+  '2015': state.commonData['2015'].data,
+  '2016': state.commonData['2016'].data
+   })
 
 export default connect(mapStateToProps)(TeamPerformanceTrend)

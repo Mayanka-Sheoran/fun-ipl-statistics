@@ -1,32 +1,12 @@
 import React from 'react'
 import BarChart from '../Bar-Chart/Bar-Chart'
 import classes from './Player-Performance-Trend.scss'
-import matches from '../../fixtures/matches.json'
 import Dropdown from '../Dropdown/Dropdown'
 import _ from 'lodash'
-import deliveries2008 from '../../fixtures/2008.json'
-import deliveries2009 from '../../fixtures/2009.json'
-import deliveries2010 from '../../fixtures/2010.json'
-import deliveries2011 from '../../fixtures/2011.json'
-import deliveries2012 from '../../fixtures/2012.json'
-import deliveries2013 from '../../fixtures/2013.json'
-import deliveries2014 from '../../fixtures/2014.json'
-import deliveries2015 from '../../fixtures/2015.json'
-import deliveries2016 from '../../fixtures/2016.json'
 import Card from '../Card/Card'
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
+import { connect } from 'react-redux'
 
-const mapping = {
-  2008: deliveries2008,
-  2009: deliveries2009,
-  2010: deliveries2010,
-  2011: deliveries2011,
-  2012: deliveries2012,
-  2013: deliveries2013,
-  2014: deliveries2014,
-  2015: deliveries2015,
-  2016: deliveries2016
-}
 class PlayerPerformanceTrend extends React.Component {
   constructor (props) {
     super(props)
@@ -37,8 +17,8 @@ class PlayerPerformanceTrend extends React.Component {
     this.state = {
       series: [],
       teams: [{'label': 'All', value: 'All'}],
-      options: _.uniq(_.map(matches, 'team1')),
-      seasons: _.uniq(_.map(matches, 'season')),
+      options: _.uniq(_.map(this.props.matches, 'team1')),
+      seasons: _.uniq(_.map(this.props.matches, 'season')),
       seasonsOptions: [{'label': 'All', value: 'All'}],
       uniqPlayers: [],
       players: [{'label': 'None', value: 'None'}],
@@ -65,14 +45,25 @@ class PlayerPerformanceTrend extends React.Component {
       xAxis: [],
       xAxisWickets: []
     }
+    this.mapping = {
+      2008: this.props['2008'],
+      2009: this.props['2009'],
+      2010: this.props['2010'],
+      2011: this.props['2011'],
+      2012: this.props['2012'],
+      2013: this.props['2013'],
+      2014: this.props['2014'],
+      2015: this.props['2015'],
+      2016: this.props['2016']
+    }
   }
 
   getInitialState () {
     this.state = {
       series: [],
       teams: [{'label': 'All', value: 'All'}],
-      options: _.uniq(_.map(matches, 'team1')),
-      seasons: _.uniq(_.map(matches, 'season')),
+      options: _.uniq(_.map(this.props.matches, 'team1')),
+      seasons: _.uniq(_.map(this.props.matches, 'season')),
       seasonsOptions: [{'label': 'All', value: 'All'}],
       uniqPlayers: [],
       players: [{'label': 'None', value: 'None'}],
@@ -102,8 +93,8 @@ class PlayerPerformanceTrend extends React.Component {
   }
   componentWillMount () {
     this.state.seasons.map(function (year) {
-      const uniqBatsmenInASeason = _.uniq(_.map(mapping[year], 'batsman'))
-      const uniqBowlersInASeason = _.uniq(_.map(mapping[year], 'bowler'))
+      const uniqBatsmenInASeason = _.uniq(_.map(this.mapping[year], 'batsman'))
+      const uniqBowlersInASeason = _.uniq(_.map(this.mapping[year], 'bowler'))
       this.state.allPlayers = uniqBatsmenInASeason.concat(uniqBowlersInASeason)
     }, this)
 
@@ -138,30 +129,30 @@ class PlayerPerformanceTrend extends React.Component {
       runsBarSeries.name = 'Runs'
       runsBarSeries.data = []
       this.state.seasons.map(function (year) {
-        const totalRunsMade = mapping[year].reduce(function (n, match) {
+        const totalRunsMade = this.mapping[year].reduce(function (n, match) {
           return n + (match.batsman === selectedPlayer ? parseInt(match['batsman_runs']) : 0)
         }, 0)
-        const totalBoundries = mapping[year].reduce(function (n, match) {
+        const totalBoundries = this.mapping[year].reduce(function (n, match) {
           return n + (match.batsman === selectedPlayer &&
             (match['batsman_runs'] === '4' || match['batsman_runs'] === '6') ? parseInt(match['batsman_runs']) : 0)
         }, 0)
-        const totalDots = mapping[year].reduce(function (n, match) {
+        const totalDots = this.mapping[year].reduce(function (n, match) {
           return n + (match.batsman === selectedPlayer && (match['batsman_runs'] === '0'))
         }, 0)
-        const totalBallsFaced = mapping[year].reduce(function (n, match) {
+        const totalBallsFaced = this.mapping[year].reduce(function (n, match) {
           return n + (match.batsman === selectedPlayer)
         }, 0)
-        const dotsGiven = mapping[year].reduce(function (n, match) {
+        const dotsGiven = this.mapping[year].reduce(function (n, match) {
           return n + (match.bowler === selectedPlayer && (match['total_runs'] === '0'))
         }, 0)
-        const totalBowled = mapping[year].reduce(function (n, match) {
+        const totalBowled = this.mapping[year].reduce(function (n, match) {
           return n + (match.bowler === selectedPlayer)
         }, 0)
-        const extrasGiven = mapping[year].reduce(function (n, match) {
+        const extrasGiven = this.mapping[year].reduce(function (n, match) {
           return n + (match.bowler === selectedPlayer &&
             (match['extra_runs'] !== '0') ? parseInt(match['extra_runs']) : 0)
         }, 0)
-        const totalRunsGiven = mapping[year].reduce(function (n, match) {
+        const totalRunsGiven = this.mapping[year].reduce(function (n, match) {
           return n + (match.bowler === selectedPlayer ? parseInt(match['total_runs']) : 0)
         }, 0)
         dotsgivenArray.push(dotsGiven)
@@ -186,7 +177,7 @@ class PlayerPerformanceTrend extends React.Component {
       wicketBarSeries.name = 'Wickets'
       wicketBarSeries.data = []
       this.state.seasons.map(function (year) {
-        const totalWicketsTook = _.filter(mapping[year], function (match) {
+        const totalWicketsTook = _.filter(this.mapping[year], function (match) {
           if (match.bowler === selectedPlayer && match['player_dismissed'] &&
             match['dismissal_kind'] !== 'run out') return match
         }).length
@@ -207,10 +198,10 @@ class PlayerPerformanceTrend extends React.Component {
       const newRunsBarSeries = []
       const matchOpponentsBowling = []
       const newWicketBarSeries = []
-      const deliveresPlayedByPlayer = _.filter(mapping[year], function (match) {
+      const deliveresPlayedByPlayer = _.filter(this.mapping[year], function (match) {
         return match['batsman'] === selectedPlayer
       })
-      const deliveresBowledByPlayer = _.filter(mapping[year], function (match) {
+      const deliveresBowledByPlayer = _.filter(this.mapping[year], function (match) {
         return match['bowler'] === selectedPlayer
       })
 
@@ -233,31 +224,31 @@ class PlayerPerformanceTrend extends React.Component {
 
       newWicketBarSeries.push(wicketBarSeries)
 
-      const totalRunsMade = mapping[year].reduce(function (n, match) {
+      const totalRunsMade = this.mapping[year].reduce(function (n, match) {
         return n + (match.batsman === selectedPlayer ? parseInt(match['batsman_runs']) : 0)
       }, 0)
-      const totalBoundries = mapping[year].reduce(function (n, match) {
+      const totalBoundries = this.mapping[year].reduce(function (n, match) {
         return n + (match.batsman === selectedPlayer &&
           (match['batsman_runs'] === '4' || match['batsman_runs'] === '6')
           ? parseInt(match['batsman_runs']) : 0)
       }, 0)
-      const totalDots = mapping[year].reduce(function (n, match) {
+      const totalDots = this.mapping[year].reduce(function (n, match) {
         return n + (match.batsman === selectedPlayer && (match['batsman_runs'] === '0'))
       }, 0)
-      const totalBallsFaced = mapping[year].reduce(function (n, match) {
+      const totalBallsFaced = this.mapping[year].reduce(function (n, match) {
         return n + (match.batsman === selectedPlayer)
       }, 0)
-      const dotsGiven = mapping[year].reduce(function (n, match) {
+      const dotsGiven = this.mapping[year].reduce(function (n, match) {
         return n + (match.bowler === selectedPlayer && (match['total_runs'] === '0'))
       }, 0)
-      const totalBowled = mapping[year].reduce(function (n, match) {
+      const totalBowled = this.mapping[year].reduce(function (n, match) {
         return n + (match.bowler === selectedPlayer)
       }, 0)
-      const extrasGiven = mapping[year].reduce(function (n, match) {
+      const extrasGiven = this.mapping[year].reduce(function (n, match) {
         return n + (match.bowler === selectedPlayer && (match['extra_runs'] !== '0')
           ? parseInt(match['extra_runs']) : 0)
       }, 0)
-      const totalRunsGiven = mapping[year].reduce(function (n, match) {
+      const totalRunsGiven = this.mapping[year].reduce(function (n, match) {
         return n + (match.bowler === selectedPlayer ? parseInt(match['total_runs']) : 0)
       }, 0)
 
@@ -346,7 +337,20 @@ class PlayerPerformanceTrend extends React.Component {
 }
 
 PlayerPerformanceTrend.propTypes = {
-  params: React.PropTypes.object.isRequired
+  params: React.PropTypes.object.isRequired,
 }
 
-export default PlayerPerformanceTrend
+const mapStateToProps = (state) => ({ 
+  matches: state.commonData.matches.data,
+  '2008': state.commonData['2008'].data,
+  '2009': state.commonData['2009'].data,
+  '2010': state.commonData['2010'].data,
+  '2011': state.commonData['2011'].data,
+  '2012': state.commonData['2012'].data,
+  '2013': state.commonData['2013'].data,
+  '2014': state.commonData['2014'].data,
+  '2015': state.commonData['2015'].data,
+  '2016': state.commonData['2016'].data
+  })
+
+export default connect(mapStateToProps)(PlayerPerformanceTrend)

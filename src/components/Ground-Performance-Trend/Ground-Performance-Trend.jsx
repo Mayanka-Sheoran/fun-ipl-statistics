@@ -1,10 +1,10 @@
 import React from 'react'
 import PieChart from '../Pie-Chart/Pie-Chart'
 import classes from './Ground-Performance-Trend.scss'
-import matches from '../../fixtures/matches.json'
 import Dropdown from '../Dropdown/Dropdown'
 import _ from 'lodash'
 import Card from '../Card/Card'
+import { connect } from 'react-redux'
 
 class GroundPerformanceTrend extends React.Component {
   constructor (props) {
@@ -13,8 +13,8 @@ class GroundPerformanceTrend extends React.Component {
       selectedGround: 'All',
       series: [],
       groundOptions: [{'label': 'All', value: 'All'}],
-      venues: _.uniq(_.map(matches, 'venue')),
-      seasons: _.uniq(_.map(matches, 'season')),
+      venues: _.uniq(_.map(this.props.matches, 'venue')),
+      seasons: _.uniq(_.map(this.props.matches, 'season')),
       teamTrajectoryData: [],
       pieChartData: {
         title: '% of Matches won batting first on the ground',
@@ -39,13 +39,13 @@ class GroundPerformanceTrend extends React.Component {
     const newOptionBall = {}
     newOptionBall.name = 'Ball First Wins'
 
-    const matchesWonBatFirst = matches.reduce(function (n, match) {
+    const matchesWonBatFirst = this.props.matches.reduce(function (n, match) {
       return n + (match.result === 'normal' && (match['toss_winner'] === match['winner'] &&
         match['toss_decision'] === 'bat') || (match['toss_winner'] !== match['winner'] &&
         match['toss_decision'] === 'field'))
     }, 0)
 
-    const totalMatches = matches.reduce(function (n, match) {
+    const totalMatches = this.props.matches.reduce(function (n, match) {
       return n + (match.result === 'normal')
     }, 0)
 
@@ -65,12 +65,12 @@ class GroundPerformanceTrend extends React.Component {
       const newOptionBall = {}
       newOptionBall.name = 'Ball First Wins'
 
-      const matchesWonBatFirst = matches.reduce(function (n, match) {
+      const matchesWonBatFirst = this.props.matches.reduce(function (n, match) {
         return n + ((match.venue === item.target.value) &&
          ((match['toss_winner'] === match['winner'] && match['toss_decision'] === 'bat') ||
           (match['toss_winner'] !== match['winner'] && match['toss_decision'] === 'field')))
       }, 0)
-      const totalMatches = matches.reduce(function (n, match) {
+      const totalMatches = this.props.matches.reduce(function (n, match) {
         return n + (match.venue === item.target.value && match.result === 'normal')
       }, 0)
       const percentage = parseInt((matchesWonBatFirst / totalMatches) * 100)
@@ -105,4 +105,10 @@ GroundPerformanceTrend.propTypes = {
   params: React.PropTypes.object.isRequired
 }
 
-export default GroundPerformanceTrend
+GroundPerformanceTrend.propTypes = {
+  params: React.PropTypes.object.isRequired,
+}
+
+const mapStateToProps = (state) => ({ matches: state.commonData.matches.data })
+
+export default connect(mapStateToProps)(GroundPerformanceTrend)

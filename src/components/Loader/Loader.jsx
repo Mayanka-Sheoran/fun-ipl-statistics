@@ -12,6 +12,6 @@ Loader.propTypes = {
   loaderVisibility: React.PropTypes.bool
 }
 
-const mapStateToProps = (state) => ({ loaderVisibility: state.loaderVisibility })
+const mapStateToProps = (state) => ({ loaderVisibility: state.commonData.loaderVisibility })
 
 export default connect(mapStateToProps)(Loader)

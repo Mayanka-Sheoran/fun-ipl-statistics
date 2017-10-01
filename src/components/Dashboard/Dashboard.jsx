@@ -12,21 +12,21 @@ class Dashboard extends React.Component {
     super(props)
     this.navigate= this.navigate.bind(this)
   }
-  componentWillMount(){
+  componentDidMount(){
     this.props.actions.getMatches()
   }
   navigate (link) {
-    // this.context.router.push(link)
+    this.context.router.push(link)
   }
   render(){
   return (<div className={classes.container + ' full-size px1 py2'}>
     <Card cardType='carousal'><Carousel /></Card>
     <div className={classes.bottomCardContainer}>
-      <div onClick={this.navigate('/team')} >
+      <div onClick={() => this.navigate('/team')} >
         <Card cardType='tile' cardDetails='team' cardTitle='Know your favourite team better' /></div>
-      <div onClick={this.navigate('/player')}>
+      <div onClick={() => this.navigate('/player')}>
         <Card cardType='tile' cardDetails='player' cardTitle='Player performances through the last 9 seasons' /></div>
-      <div onClick={this.navigate('/ground')}>
+      <div onClick={() => this.navigate('/ground')}>
         <Card cardType='tile' cardDetails='ground' cardTitle='Fun facts about cricket stadiums' /></div>
     </div>
   </div>)
