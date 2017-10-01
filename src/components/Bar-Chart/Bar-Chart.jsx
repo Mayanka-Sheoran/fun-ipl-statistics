@@ -15,8 +15,10 @@ class BarChart extends React.Component {
   }
   initializeChart = (data, series, xAxis, container) => {
     Highcharts.chart(container, {
+      colors: ['#616b7c'],
       chart: {
-        type: 'bar'
+        type: 'bar',
+        backgroundColor: null
       },
       title: {
         text: data.title
@@ -47,6 +49,9 @@ class BarChart extends React.Component {
 }
 
 BarChart.propTypes = {
-  data: React.PropTypes.object.isRequired
+  data: React.PropTypes.object.isRequired,
+  series: React.PropTypes.array.isRequired,
+  xAxis: React.PropTypes.array,
+  container: React.PropTypes.string.isRequired
 }
 export default BarChart

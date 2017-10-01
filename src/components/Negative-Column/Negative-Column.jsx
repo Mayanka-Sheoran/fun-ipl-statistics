@@ -17,7 +17,8 @@ class NegativeColumn extends React.Component {
   initializeChart = (data, series, container, categories) => {
     Highcharts.chart(container, {
       chart: {
-        type: 'bar'
+        type: 'bar',
+        backgroundColor: null
       },
       title: {
         text: data.title
@@ -63,6 +64,9 @@ class NegativeColumn extends React.Component {
 }
 
 NegativeColumn.propTypes = {
-  data: React.PropTypes.object.isRequired
+  data: React.PropTypes.object.isRequired,
+  series: React.PropTypes.array.isRequired,
+  categories: React.PropTypes.array,
+  container: React.PropTypes.string.isRequired
 }
 export default NegativeColumn

@@ -1,11 +1,10 @@
 import React from 'react'
-import BarChart from '../Bar-Chart/Bar-Chart'
 import PieChart from '../Pie-Chart/Pie-Chart'
-import ColumnChart from '../Column-Chart/Column-Chart'
 import classes from './Ground-Performance-Trend.scss'
 import matches from '../../fixtures/matches.json'
 import Dropdown from '../Dropdown/Dropdown'
 import _ from 'lodash'
+import Card from '../Card/Card'
 
 class GroundPerformanceTrend extends React.Component {
   constructor (props) {
@@ -41,11 +40,13 @@ class GroundPerformanceTrend extends React.Component {
     newOptionBall.name = 'Ball First Wins'
 
     const matchesWonBatFirst = matches.reduce(function (n, match) {
-      return n + (match.result == 'normal' && (match['toss_winner'] == match['winner'] && match['toss_decision'] == 'bat') || (match['toss_winner'] !== match['winner'] && match['toss_decision'] == 'field'))
+      return n + (match.result === 'normal' && (match['toss_winner'] === match['winner'] &&
+        match['toss_decision'] === 'bat') || (match['toss_winner'] !== match['winner'] &&
+        match['toss_decision'] === 'field'))
     }, 0)
 
     const totalMatches = matches.reduce(function (n, match) {
-      return n + (match.result == 'normal')
+      return n + (match.result === 'normal')
     }, 0)
 
     const percentage = parseInt((matchesWonBatFirst / totalMatches) * 100)
@@ -65,10 +66,12 @@ class GroundPerformanceTrend extends React.Component {
       newOptionBall.name = 'Ball First Wins'
 
       const matchesWonBatFirst = matches.reduce(function (n, match) {
-        return n + ((match.venue == item.target.value) && ((match['toss_winner'] == match['winner'] && match['toss_decision'] == 'bat') || (match['toss_winner'] !== match['winner'] && match['toss_decision'] == 'field')))
+        return n + ((match.venue === item.target.value) &&
+         ((match['toss_winner'] === match['winner'] && match['toss_decision'] === 'bat') ||
+          (match['toss_winner'] !== match['winner'] && match['toss_decision'] === 'field')))
       }, 0)
       const totalMatches = matches.reduce(function (n, match) {
-        return n + (match.venue == item.target.value && match.result == 'normal')
+        return n + (match.venue === item.target.value && match.result === 'normal')
       }, 0)
       const percentage = parseInt((matchesWonBatFirst / totalMatches) * 100)
       newOption.y = percentage
@@ -81,11 +84,18 @@ class GroundPerformanceTrend extends React.Component {
     }
   }
   render () {
-    console.log(this.state)
     return (<div className={classes.container + ' full-size'} >
-      <Dropdown optionList={this.state.groundOptions} onChange={this.getSelectedGround} />
+      <Card cardType='selector'>
+        <div className={classes.teamSelectorContainer}>
+          <div className={classes.dropDownContainer}>
+            <div className={classes.selectText}>Select a cricket ground</div>
+            <Dropdown optionList={this.state.groundOptions} onChange={this.getSelectedGround} />
+          </div>
+        </div>
+      </Card>
       <div className='flex performace-chart pl1'>
-        <PieChart data={this.state.pieChartData} series={this.state.pieChartSeriesBatFirst} container='containerPie' /></div>
+        <PieChart data={this.state.pieChartData}
+          series={this.state.pieChartSeriesBatFirst} container='containerPie' /></div>
     </div>
     )
   }

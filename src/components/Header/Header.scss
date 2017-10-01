@@ -3,7 +3,7 @@
 .container {
   height: 50px;
   z-index: 2;
-  box-shadow: 0 0 5px 0 rgba(0,0,0,.25);
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, .25);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -19,5 +19,16 @@
   .logo {
     width: 60px;
     cursor: pointer;
+  }
+  .appLogo {
+    width: 350px;
+  }
+}
+
+@media screen and (max-width: $mobile_breakpoint) {
+  .container {
+    .appLogo {
+      width: 270px;
+    }
   }
 }

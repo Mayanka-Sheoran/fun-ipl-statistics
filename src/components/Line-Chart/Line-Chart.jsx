@@ -17,7 +17,8 @@ class LineChart extends React.Component {
   initializeChart = (data, series) => {
     Highcharts.chart('container', {
       chart: {
-        type: 'line'
+        type: 'line',
+        backgroundColor: null
       },
       title: {
         text: data.title
@@ -44,6 +45,7 @@ class LineChart extends React.Component {
 }
 
 LineChart.propTypes = {
-  data: React.PropTypes.object.isRequired
+  data: React.PropTypes.object.isRequired,
+  series: React.PropTypes.array.isRequired
 }
 export default LineChart

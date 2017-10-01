@@ -1,12 +1,9 @@
 import React from 'react'
 import BarChart from '../Bar-Chart/Bar-Chart'
-import LineChart from '../Line-Chart/Line-Chart'
 import classes from './Player-Performance-Trend.scss'
 import matches from '../../fixtures/matches.json'
 import Dropdown from '../Dropdown/Dropdown'
 import _ from 'lodash'
-import homeGrounds from '../../fixtures/Home-Ground.json'
-import HeatMap from '../Heat-Map/Heat-Map'
 import deliveries2008 from '../../fixtures/2008.json'
 import deliveries2009 from '../../fixtures/2009.json'
 import deliveries2010 from '../../fixtures/2010.json'
@@ -85,7 +82,7 @@ class PlayerPerformanceTrend extends React.Component {
       },
       heatMapSeries: [],
       allPlayers: [],
-      selectedPlayer: this.state.selectedPlayer? this.state.selectedPlayer : 'None',
+      selectedPlayer: this.state.selectedPlayer ? this.state.selectedPlayer : 'None',
       runsBarSeries: [],
       runsBarData: {
         title: 'Runs Scored in every season'
@@ -105,7 +102,6 @@ class PlayerPerformanceTrend extends React.Component {
   }
   componentWillMount () {
     this.state.seasons.map(function (year) {
-      const allPlayers = []
       const uniqBatsmenInASeason = _.uniq(_.map(mapping[year], 'batsman'))
       const uniqBowlersInASeason = _.uniq(_.map(mapping[year], 'bowler'))
       this.state.allPlayers = uniqBatsmenInASeason.concat(uniqBowlersInASeason)
@@ -128,76 +124,79 @@ class PlayerPerformanceTrend extends React.Component {
     }, this)
   }
 
-  calculateStats(year, player){
-    console.log(year)
-     if(year == 'All'){
-    const selectedPlayer = player
-    console.log(selectedPlayer)
-    const runsBarSeries = {}
-    const boundarySeries = []
-    const dotRuns = []
-    const ballsFaced = []
-    const dotsgivenArray = []
-    const extrasGivenArray = []
-    const totalRunsGivenArray = []
-    const totalBowledArray = []
-    runsBarSeries.name = 'Runs'
-    runsBarSeries.data = []
-    this.state.seasons.map(function (year) {
-      const totalRunsMade = mapping[year].reduce(function (n, match) {
-        return n + (match.batsman == selectedPlayer ? parseInt(match['batsman_runs']) : 0)
-      }, 0)
-      const totalBoundries = mapping[year].reduce(function (n, match) {
-        return n + (match.batsman == selectedPlayer && (match['batsman_runs'] == '4' || match['batsman_runs'] == '6') ? parseInt(match['batsman_runs']) : 0)
-      }, 0)
-      const totalDots = mapping[year].reduce(function (n, match) {
-        return n + (match.batsman == selectedPlayer && (match['batsman_runs'] == '0'))
-      }, 0)
-      const totalBallsFaced = mapping[year].reduce(function (n, match) {
-        return n + (match.batsman == selectedPlayer)
-      }, 0)
-      const dotsGiven = mapping[year].reduce(function (n, match) {
-        return n + (match.bowler == selectedPlayer && (match['total_runs'] == '0'))
-      }, 0)
-      const totalBowled = mapping[year].reduce(function (n, match) {
-        return n + (match.bowler == selectedPlayer)
-      }, 0)
-      const extrasGiven = mapping[year].reduce(function (n, match) {
-        return n + (match.bowler == selectedPlayer && (match['extra_runs'] !== '0') ? parseInt(match['extra_runs']) : 0)
-      }, 0)
-      const totalRunsGiven = mapping[year].reduce(function (n, match) {
-        return n + (match.batsman == selectedPlayer ? parseInt(match['total_runs']) : 0)
-      }, 0)
-      dotsgivenArray.push(dotsGiven)
-      extrasGivenArray.push(extrasGiven)
-      totalRunsGivenArray.push(totalRunsGiven)
-      totalBowledArray.push(totalBowled)
-      dotRuns.push(totalDots)
-      ballsFaced.push(totalBallsFaced)
-      boundarySeries.push(totalBoundries)
-      runsBarSeries.data.push(totalRunsMade)
-    }, this)
+  calculateStats (year, player) {
+    if (year === 'All') {
+      const selectedPlayer = player
+      const runsBarSeries = {}
+      const boundarySeries = []
+      const dotRuns = []
+      const ballsFaced = []
+      const dotsgivenArray = []
+      const extrasGivenArray = []
+      const totalRunsGivenArray = []
+      const totalBowledArray = []
+      runsBarSeries.name = 'Runs'
+      runsBarSeries.data = []
+      this.state.seasons.map(function (year) {
+        const totalRunsMade = mapping[year].reduce(function (n, match) {
+          return n + (match.batsman === selectedPlayer ? parseInt(match['batsman_runs']) : 0)
+        }, 0)
+        const totalBoundries = mapping[year].reduce(function (n, match) {
+          return n + (match.batsman === selectedPlayer &&
+            (match['batsman_runs'] === '4' || match['batsman_runs'] === '6') ? parseInt(match['batsman_runs']) : 0)
+        }, 0)
+        const totalDots = mapping[year].reduce(function (n, match) {
+          return n + (match.batsman === selectedPlayer && (match['batsman_runs'] === '0'))
+        }, 0)
+        const totalBallsFaced = mapping[year].reduce(function (n, match) {
+          return n + (match.batsman === selectedPlayer)
+        }, 0)
+        const dotsGiven = mapping[year].reduce(function (n, match) {
+          return n + (match.bowler === selectedPlayer && (match['total_runs'] === '0'))
+        }, 0)
+        const totalBowled = mapping[year].reduce(function (n, match) {
+          return n + (match.bowler === selectedPlayer)
+        }, 0)
+        const extrasGiven = mapping[year].reduce(function (n, match) {
+          return n + (match.bowler === selectedPlayer &&
+            (match['extra_runs'] !== '0') ? parseInt(match['extra_runs']) : 0)
+        }, 0)
+        const totalRunsGiven = mapping[year].reduce(function (n, match) {
+          return n + (match.bowler === selectedPlayer ? parseInt(match['total_runs']) : 0)
+        }, 0)
+        dotsgivenArray.push(dotsGiven)
+        extrasGivenArray.push(extrasGiven)
+        totalRunsGivenArray.push(totalRunsGiven)
+        totalBowledArray.push(totalBowled)
+        dotRuns.push(totalDots)
+        ballsFaced.push(totalBallsFaced)
+        boundarySeries.push(totalBoundries)
+        runsBarSeries.data.push(totalRunsMade)
+      }, this)
 
-    this.state.dotsPercentage = Math.round((_.sum(dotRuns) / _.sum(ballsFaced)) * 100)
-    this.state.boundaryPercentage = Math.round((_.sum(boundarySeries) / _.sum(runsBarSeries.data)) * 100)
-    this.state.extrasGivenPercentage = Math.round((_.sum(extrasGivenArray) / _.sum(totalRunsGivenArray)) * 100)
-    this.state.dotsGivenPercentage = Math.round((_.sum(dotsgivenArray) / _.sum(totalBowledArray)) * 100)
-    this.state.runsBarSeries.push(runsBarSeries)
-    this.state.xAxis = this.state.seasons
-    this.state.xAxisWickets = this.state.seasons
+      this.state.dotsPercentage = Math.round((_.sum(dotRuns) / _.sum(ballsFaced)) * 100)
+      this.state.boundaryPercentage = Math.round((_.sum(boundarySeries) / _.sum(runsBarSeries.data)) * 100)
+      this.state.extrasGivenPercentage = Math.round((_.sum(extrasGivenArray) / _.sum(totalRunsGivenArray)) * 100)
+      this.state.dotsGivenPercentage = Math.round((_.sum(dotsgivenArray) / _.sum(totalBowledArray)) * 100)
+      this.state.runsBarSeries.push(runsBarSeries)
+      this.state.xAxis = this.state.seasons
+      this.state.xAxisWickets = this.state.seasons
 
-    const wicketBarSeries = {}
-    wicketBarSeries.name = 'Wickets'
-    wicketBarSeries.data = []
-    this.state.seasons.map(function (year) {
-      const totalWicketsTook = _.filter(mapping[year], function (match) { if (match.bowler == selectedPlayer && match['player_dismissed'] && match['dismissal_kind'] !== 'run out') return match }).length
-      wicketBarSeries.data.push(totalWicketsTook)
-    }, this)
+      const wicketBarSeries = {}
+      wicketBarSeries.name = 'Wickets'
+      wicketBarSeries.data = []
+      this.state.seasons.map(function (year) {
+        const totalWicketsTook = _.filter(mapping[year], function (match) {
+          if (match.bowler === selectedPlayer && match['player_dismissed'] &&
+            match['dismissal_kind'] !== 'run out') return match
+        }).length
+        wicketBarSeries.data.push(totalWicketsTook)
+      }, this)
 
-    this.state.wicketBarSeries.push(wicketBarSeries)
-     }
-     if(year!=='All'){
-       const selectedPlayer = player
+      this.state.wicketBarSeries.push(wicketBarSeries)
+    }
+    if (year !== 'All') {
+      const selectedPlayer = player
       const runsBarSeries = {}
       const wicketBarSeries = {}
       runsBarSeries.name = 'Runs'
@@ -209,10 +208,10 @@ class PlayerPerformanceTrend extends React.Component {
       const matchOpponentsBowling = []
       const newWicketBarSeries = []
       const deliveresPlayedByPlayer = _.filter(mapping[year], function (match) {
-        return match['batsman'] == selectedPlayer
+        return match['batsman'] === selectedPlayer
       })
       const deliveresBowledByPlayer = _.filter(mapping[year], function (match) {
-        return match['bowler'] == selectedPlayer
+        return match['bowler'] === selectedPlayer
       })
 
       _.map(_.groupBy(deliveresPlayedByPlayer, 'match_id'), function (item) {
@@ -226,36 +225,40 @@ class PlayerPerformanceTrend extends React.Component {
 
       _.map(_.groupBy(deliveresBowledByPlayer, 'match_id'), function (item) {
         matchOpponentsBowling.push(item[0]['batting_team'])
-        const wicketsTakenByPlayerInMatch = _.filter(item, function (match) { if (match['player_dismissed'] && match['dismissal_kind'] !== 'run out') return match }).length || 0
-        console.log(wicketsTakenByPlayerInMatch)
+        const wicketsTakenByPlayerInMatch = _.filter(item, function (match) {
+          if (match['player_dismissed'] && match['dismissal_kind'] !== 'run out') { return match }
+        }).length || 0
         wicketBarSeries.data.push(wicketsTakenByPlayerInMatch)
       })
 
       newWicketBarSeries.push(wicketBarSeries)
 
       const totalRunsMade = mapping[year].reduce(function (n, match) {
-        return n + (match.batsman == selectedPlayer ? parseInt(match['batsman_runs']) : 0)
+        return n + (match.batsman === selectedPlayer ? parseInt(match['batsman_runs']) : 0)
       }, 0)
       const totalBoundries = mapping[year].reduce(function (n, match) {
-        return n + (match.batsman == selectedPlayer && (match['batsman_runs'] == '4' || match['batsman_runs'] == '6') ? parseInt(match['batsman_runs']) : 0)
+        return n + (match.batsman === selectedPlayer &&
+          (match['batsman_runs'] === '4' || match['batsman_runs'] === '6')
+          ? parseInt(match['batsman_runs']) : 0)
       }, 0)
       const totalDots = mapping[year].reduce(function (n, match) {
-        return n + (match.batsman == selectedPlayer && (match['batsman_runs'] == '0'))
+        return n + (match.batsman === selectedPlayer && (match['batsman_runs'] === '0'))
       }, 0)
       const totalBallsFaced = mapping[year].reduce(function (n, match) {
-        return n + (match.batsman == selectedPlayer)
+        return n + (match.batsman === selectedPlayer)
       }, 0)
       const dotsGiven = mapping[year].reduce(function (n, match) {
-        return n + (match.bowler == selectedPlayer && (match['total_runs'] == '0'))
+        return n + (match.bowler === selectedPlayer && (match['total_runs'] === '0'))
       }, 0)
       const totalBowled = mapping[year].reduce(function (n, match) {
-        return n + (match.bowler == selectedPlayer)
+        return n + (match.bowler === selectedPlayer)
       }, 0)
       const extrasGiven = mapping[year].reduce(function (n, match) {
-        return n + (match.bowler == selectedPlayer && (match['extra_runs'] !== '0') ? parseInt(match['extra_runs']) : 0)
+        return n + (match.bowler === selectedPlayer && (match['extra_runs'] !== '0')
+          ? parseInt(match['extra_runs']) : 0)
       }, 0)
       const totalRunsGiven = mapping[year].reduce(function (n, match) {
-        return n + (match.batsman == selectedPlayer ? parseInt(match['total_runs']) : 0)
+        return n + (match.bowler === selectedPlayer ? parseInt(match['total_runs']) : 0)
       }, 0)
 
       this.setState({
@@ -268,11 +271,11 @@ class PlayerPerformanceTrend extends React.Component {
         runsBarSeries: newRunsBarSeries,
         wicketBarSeries: newWicketBarSeries
       })
-     }
+    }
   }
   getSelectedYear (item) {
     this.setState({ selectedYear: item.target.value })
-    if (item.target.value != 'All') {
+    if (item.target.value !== 'All') {
       this.getInitialState()
       this.componentWillMount()
       this.calculateStats(item.target.value, this.state.selectedPlayer)
@@ -289,53 +292,54 @@ class PlayerPerformanceTrend extends React.Component {
     this.calculateStats(this.state.selectedYear, item.target.value)
   }
   render () {
-    console.log(this.state)
     return (<div className={classes.container + ' full-size'} >
       <Card cardType='selector'>
-       <div className={classes.teamSelectorContainer}>
-        <div className={classes.dropDownContainer}>
-          <div className={classes.selectText}>Select a player</div>
-          <Dropdown optionList={this.state.players} onChange={this.getSelectedPlayer} />
-        </div>  
-        {this.state.selectedPlayer!=='None' && <div className={classes.dropDownContainer}>
-          <div className={classes.selectText}>Select a season</div>
-          <Dropdown optionList={this.state.seasonsOptions} onChange={this.getSelectedYear} />
-        </div>}  
-       </div>     
+        <div className={classes.teamSelectorContainer}>
+          <div className={classes.dropDownContainer}>
+            <div className={classes.selectText}>Select a player</div>
+            <Dropdown optionList={this.state.players} onChange={this.getSelectedPlayer} />
+          </div>
+          {this.state.selectedPlayer !== 'None' && <div className={classes.dropDownContainer}>
+            <div className={classes.selectText}>Select an IPL season</div>
+            <Dropdown optionList={this.state.seasonsOptions} onChange={this.getSelectedYear} />
+          </div>}
+        </div>
       </Card>
-    {this.state.selectedPlayer!=='None' && <div className={classes.flexAround + ' full-width'}>
-      <div className='full-size'>
-         <Tabs>
-         <TabList>
-          <Tab>Runs</Tab>
-          <Tab>Wickets</Tab>
-        </TabList>
-          <TabPanel>
-            <div className='full-size' >
-                <BarChart container='runs' series={this.state.runsBarSeries} xAxis={this.state.xAxis} data={this.state.runsBarData} />
-            </div>
-          </TabPanel>
-          <TabPanel>
-            <div className='full-size'>
-               <BarChart container='wicktes' series={this.state.wicketBarSeries} xAxis={this.state.xAxisWickets} data={this.state.wicketsBarData} />
-            </div>
-          </TabPanel>
-        </Tabs>   
-      </div>
-      <div className='full-size'>
+      {this.state.selectedPlayer !== 'None' && <div className={classes.flexAround + ' full-width'}>
+        <div className='full-size'>
+          <Tabs>
+            <TabList>
+              <Tab>Runs</Tab>
+              <Tab>Wickets</Tab>
+            </TabList>
+            <TabPanel>
+              <div className='full-size' >
+                <BarChart container='runs' series={this.state.runsBarSeries}
+                  xAxis={this.state.xAxis} data={this.state.runsBarData} />
+              </div>
+            </TabPanel>
+            <TabPanel>
+              <div className='full-size'>
+                <BarChart container='wicktes' series={this.state.wicketBarSeries}
+                  xAxis={this.state.xAxisWickets} data={this.state.wicketsBarData} />
+              </div>
+            </TabPanel>
+          </Tabs>
+        </div>
+        <div className='full-size'>
           <div className='flex-center-xy full-width'><div>
-           <div className={classes.redNumber}>{this.state.boundaryPercentage || 0}%</div>
-           <div className={classes.mediumText}> Runs scores in boundaries </div></div>
-           <div>
-            <div  className={classes.greenNumber}>{this.state.dotsPercentage || 0}%</div>
-            <div className={classes.mediumText}> Dot balls faced</div></div></div>
+            <div className={classes.number}>{this.state.boundaryPercentage || 0}%</div>
+            <div className={classes.mediumText}> Runs scores in boundaries </div></div>
+            <div>
+              <div className={classes.number}>{this.state.dotsPercentage || 0}%</div>
+              <div className={classes.mediumText}> Dot balls faced</div></div></div>
           <div className='flex-center-xy full-width'><div>
-           <div  className={classes.greenNumber}>{this.state.extrasGivenPercentage || 0}%</div>
-           <div className={classes.mediumText}> Extras conceded</div></div>
-           <div><div  className={classes.redNumber}>{this.state.dotsGivenPercentage || 0}%</div>
-          <div className={classes.mediumText}>Dot balls bowled</div></div></div>
-      </div>    
-    </div>} 
+            <div className={classes.number}>{this.state.extrasGivenPercentage || 0}%</div>
+            <div className={classes.mediumText}> Extras conceded</div></div>
+            <div><div className={classes.number}>{this.state.dotsGivenPercentage || 0}%</div>
+              <div className={classes.mediumText}>Dot balls bowled</div></div></div>
+        </div>
+      </div>}
     </div >
     )
   }

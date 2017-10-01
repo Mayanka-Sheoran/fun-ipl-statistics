@@ -1,28 +1,58 @@
 @import '../../styles/variables';
 
 .container {
-  :global {
-    .slider, slider-frame {
+   :global {
+    .slider,
+    slider-frame {
       min-height: 200px;
     }
-    .slider-decorator-0, .slider-decorator-1 {
+    .slider-decorator-0,
+    .slider-decorator-1 {
       display: none;
     }
     .slider-decorator-2 ul {
-      top: 65px!important;
+      top: 40px!important;
     }
-    .slider-decorator-2 ul li button{
+    .slider-decorator-2 ul li button {
       color: $theme_white!important;
       font-size: 40px;
     }
-    .good {
-      color: $theme_green;
-    }
-    .bad {
-      color: $theme_red;
-    }
-    .warning {
-      color: $theme_yellow;
-    }
+  }
+}
+
+.factContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.trophy {
+  height: 260px;
+  padding: 20px;
+}
+
+.factText {
+  color: white;
+  font-size: 24px;
+  padding: 140px 0px 0 70px;
+}
+
+.best {
+  width: 250px;
+  position: absolute;
+  left: 72px;
+  top: 60px;
+}
+
+@media screen and (max-width: $mobile_breakpoint) {
+  .factText {
+    color: white;
+    font-size: 20px;
+    padding: 40px;
+  }
+  .trophy {
+    display: none;
+  }
+  .best {
+    display: none;
   }
 }

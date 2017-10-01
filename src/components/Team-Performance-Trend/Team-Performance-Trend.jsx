@@ -1,5 +1,4 @@
 import React from 'react'
-import BarChart from '../Bar-Chart/Bar-Chart'
 import LineChart from '../Line-Chart/Line-Chart'
 import ColumnChart from '../Column-Chart/Column-Chart'
 import classes from './Team-Performance-Trend.scss'
@@ -18,8 +17,6 @@ import deliveries2014 from '../../fixtures/2014.json'
 import deliveries2015 from '../../fixtures/2015.json'
 import deliveries2016 from '../../fixtures/2016.json'
 import Card from '../Card/Card'
-import Carousel from '../Carousel/Carousel'
-import imageMappings from '../../fixtures/imageMap.json'
 import logo from '../../assets/white-ipl-logo.jpg'
 import Kolkata from '../../assets/KKR logo.png'
 import Chennai from '../../assets/CSK logo.png'
@@ -38,20 +35,20 @@ import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
 import 'react-tabs/style/react-tabs.css'
 
 const imageMapping = {
-   "All Teams": logo,
-   "Kolkata Knight Riders":  Kolkata,
-   "Chennai Super Kings": Chennai,
-   "Rajasthan Royals": Rajasthan,
-   "Mumbai Indians": Mumbai,
-   "Deccan Chargers": Deccan,
-   "Kings XI Punjab": Kings,
-   "Royal Challengers Bangalore" :Royal,
-   "Delhi Daredevils": Delhi,
-   "Kochi Tuskers Kerala": Kochi,
-   "Pune Warriors": Pune,
-   "Sunrisers Hyderabad": Sunrisers,
-   "Rising Pune Supergiants": Supergiants,
-   "Gujarat Lions" : Lions
+  'All Teams': logo,
+  'Kolkata Knight Riders': Kolkata,
+  'Chennai Super Kings': Chennai,
+  'Rajasthan Royals': Rajasthan,
+  'Mumbai Indians': Mumbai,
+  'Deccan Chargers': Deccan,
+  'Kings XI Punjab': Kings,
+  'Royal Challengers Bangalore': Royal,
+  'Delhi Daredevils': Delhi,
+  'Kochi Tuskers Kerala': Kochi,
+  'Pune Warriors': Pune,
+  'Sunrisers Hyderabad': Sunrisers,
+  'Rising Pune Supergiants': Supergiants,
+  'Gujarat Lions': Lions
 }
 const mapping = {
   2008: deliveries2008,
@@ -103,7 +100,7 @@ class TeamPerformanceTrend extends React.Component {
         dataArray.push(this.state.options.indexOf(team))
         dataArray.push(this.state.seasons.indexOf(year))
         const groupByMatch = _.groupBy(_.filter(mapping[year], function (match) {
-          return match['batting_team'] == team
+          return match['batting_team'] === team
         }), 'match_id')
         _.map(groupByMatch, function (match) {
           const runsInOneMatch = match.reduce(function (n, match) {
@@ -124,10 +121,12 @@ class TeamPerformanceTrend extends React.Component {
     newOption.data = []
     this.state.options.map(function (item) {
       const totalMatchesWon = matches.reduce(function (n, match) {
-        return n + (match.winner == item)
+        return n + (match.winner === item)
       }, 0)
       const matchesWonBatFirst = matches.reduce(function (n, match) {
-        return n + ((match.winner == item && match['toss_winner'] == item && match['toss_decision'] == 'bat') || (match.winner == item && match['toss_winner'] !== item && match['toss_decision'] == 'field'))
+        return n + ((match.winner === item && match['toss_winner'] === item &&
+          match['toss_decision'] === 'bat') ||
+        (match.winner === item && match['toss_winner'] !== item && match['toss_decision'] === 'field'))
       }, 0)
       const percentage = (matchesWonBatFirst / totalMatchesWon) * 100
       newOption.data.push(parseInt(percentage))
@@ -140,10 +139,10 @@ class TeamPerformanceTrend extends React.Component {
     newOptionHomeGround.data = []
     this.state.options.map(function (item) {
       const totalMatchesWon = matches.reduce(function (n, match) {
-        return n + (match.winner == item)
+        return n + (match.winner === item)
       }, 0)
       const matchesWonHomeGround = matches.reduce(function (n, match) {
-        return n + (match.winner == item && match.city == homeGrounds[item])
+        return n + (match.winner === item && match.city === homeGrounds[item])
       }, 0)
       const percentage = (matchesWonHomeGround / totalMatchesWon) * 100
       newOptionHomeGround.data.push(parseInt(percentage))
@@ -164,7 +163,7 @@ class TeamPerformanceTrend extends React.Component {
       this.state.seasons.forEach(function (season) {
         let numberOfMatchesWon = 0
         _.forEach(matches, function (data) {
-          if (data.season == season && data.winner == item) {
+          if (data.season === season && data.winner === item) {
             numberOfMatchesWon = numberOfMatchesWon + 1
           }
         })
@@ -192,10 +191,11 @@ class TeamPerformanceTrend extends React.Component {
       newOption.data = []
       this.state.seasons.map(function (year) {
         const totalMatchesWon = matches.reduce(function (n, match) {
-          return n + (match.winner == item.target.value && match.season == year)
+          return n + (match.winner === item.target.value && match.season === year)
         }, 0)
         const matchesWonHomeGround = matches.reduce(function (n, match) {
-          return n + (match.winner == item.target.value && match.season == year && match.city == homeGrounds[item.target.value])
+          return n + (match.winner === item.target.value &&
+           match.season === year && match.city === homeGrounds[item.target.value])
         }, 0)
         const percentage = (matchesWonHomeGround / totalMatchesWon) * 100
         newOption.data.push(parseInt(percentage))
@@ -208,59 +208,77 @@ class TeamPerformanceTrend extends React.Component {
       newOptionHomeGround.data = []
       this.state.seasons.map(function (year) {
         const totalMatchesWon = matches.reduce(function (n, match) {
-          return n + (match.winner == item.target.value && match.season == year)
+          return n + (match.winner === item.target.value && match.season === year)
         }, 0)
         const matchesWonBatFirst = matches.reduce(function (n, match) {
-          return n + ((match.winner == item.target.value && match['toss_winner'] == item.target.value && match['toss_decision'] == 'bat' && match.season == year) || (match.winner == item.target.value && match['toss_winner'] !== item.target.value && match['toss_decision'] == 'field' && match.season == year))
+          return n + ((match.winner === item.target.value &&
+            match['toss_winner'] === item.target.value &&
+             match['toss_decision'] === 'bat' &&
+              match.season === year) || (match.winner === item.target.value &&
+              match['toss_winner'] !== item.target.value && match['toss_decision'] === 'field' &&
+              match.season === year))
         }, 0)
         const percentage = (matchesWonBatFirst / totalMatchesWon) * 100
         newOptionHomeGround.data.push(parseInt(percentage))
       }, this)
       newcolumnChartSeriesBatFirst.push(newOptionHomeGround)
 
-      this.setState({series: _.map(oneTeamData, _.partial(_.pick, _, ['name', 'data'])), newcolumnChartSeriesHomeGround: newcolumnChartSeriesHomeGround, newcolumnChartSeriesBatFirst: newcolumnChartSeriesBatFirst, xAxisCategories: this.state.seasons})
+      this.setState({series: _.map(oneTeamData,
+       _.partial(_.pick, _, ['name', 'data'])),
+        newcolumnChartSeriesHomeGround: newcolumnChartSeriesHomeGround,
+        newcolumnChartSeriesBatFirst: newcolumnChartSeriesBatFirst, xAxisCategories: this.state.seasons})
     } else {
       this.setState({series: this.state.teamTrajectoryData})
     }
   }
   render () {
-    console.log(this.state)
     return (<div className={classes.container + ' full-size'} >
       <Card cardType='selector'>
-       <div className={classes.teamSelectorContainer}>
-        <img className={classes.whiteLogo} src={imageMapping[this.state.selectedTeam]}/>
-        <div className={classes.dropDownContainer}>
-          <div className={classes.selectText}>Select a team</div>
-          <Dropdown optionList={this.state.teams} onChange={this.getSelectedTeam} />
-        </div>  
-       </div>     
+        <div className={classes.teamSelectorContainer}>
+          <img className={classes.whiteLogo} src={imageMapping[this.state.selectedTeam]} />
+          <div className={classes.dropDownContainer}>
+            <div className={classes.selectText}>Select a team</div>
+            <Dropdown optionList={this.state.teams} onChange={this.getSelectedTeam} />
+          </div>
+        </div>
       </Card>
-    <Tabs>
-      <TabList>
-        <Tab>Team Trajectory</Tab>
-        <Tab>Bat First Wins</Tab>
-        <Tab>Home Ground Wins</Tab>
-        <Tab>Average Runs</Tab>
-      </TabList>
+      <Tabs>
+        <TabList>
+          <Tab>Team Trajectory</Tab>
+          <Tab>Bat First Wins</Tab>
+          <Tab>Home Ground Wins</Tab>
+          <Tab>Average Runs</Tab>
+        </TabList>
 
-      <TabPanel>
-        <div className='flex performace-chart pl1' >
-        <LineChart data={this.data} series={this.state.series.length > 0 ? this.state.series : this.state.teamTrajectoryData} />
-        </div>
-      </TabPanel>
-      <TabPanel>
-        <div className='flex performace-chart pl1'>
-          <ColumnChart data={this.state.columnChartData} xAxisCategories={this.state.xAxisCategories} series={this.state.selectedTeam == 'All Teams' ? this.state.columnChartSeriesBatFirst : this.state.newcolumnChartSeriesBatFirst} container='containercolumn' />
-        </div>
-      </TabPanel>
-      <TabPanel>
-         <div className='flex performace-chart pl1'><ColumnChart xAxisCategories={this.state.xAxisCategories} data={this.state.columnChartDataHomeGround} series={this.state.selectedTeam == 'All Teams' ? this.state.columnChartSeriesHomeGround : this.state.newcolumnChartSeriesHomeGround} container='containercolumn2' /></div>
-      </TabPanel>
-      <TabPanel>
-         <HeatMap data={this.state.heatMapData} container='heat-map-runs' xAxis={this.state.options} yAxis={this.state.seasons} series={this.state.heatMapSeries} />
-      </TabPanel>
+        <TabPanel>
+          <div className='flex performace-chart pl1' >
+            <LineChart data={this.data}
+              series={this.state.series.length > 0 ? this.state.series : this.state.teamTrajectoryData} />
+          </div>
+        </TabPanel>
+        <TabPanel>
+          <div className='flex performace-chart pl1'>
+            <ColumnChart data={this.state.columnChartData}
+              xAxisCategories={this.state.xAxisCategories}
+              series={this.state.selectedTeam === 'All Teams'
+            ? this.state.columnChartSeriesBatFirst : this.state.newcolumnChartSeriesBatFirst}
+              container='containercolumn' />
+          </div>
+        </TabPanel>
+        <TabPanel>
+          <div className='flex performace-chart pl1'>
+            <ColumnChart xAxisCategories={this.state.xAxisCategories}
+              data={this.state.columnChartDataHomeGround}
+              series={this.state.selectedTeam === 'All Teams'
+           ? this.state.columnChartSeriesHomeGround : this.state.newcolumnChartSeriesHomeGround}
+              container='containercolumn2' /></div>
+        </TabPanel>
+        <TabPanel>
+          <HeatMap data={this.state.heatMapData} container='heat-map-runs'
+            xAxis={this.state.options} yAxis={this.state.seasons} series={this.state.heatMapSeries} />
+        </TabPanel>
 
-    </Tabs>   
+      </Tabs>
     </div >
     )
   }

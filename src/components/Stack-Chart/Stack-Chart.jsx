@@ -14,7 +14,8 @@ class StackChart extends React.Component {
     Highcharts.chart('container', {
       chart: {
         type: 'column',
-        height: data.height
+        height: data.height,
+        backgroundColor: null
       },
       plotOptions: {
         column: {

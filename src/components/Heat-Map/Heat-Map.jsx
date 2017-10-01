@@ -17,8 +17,10 @@ class HeatMap extends React.Component {
   }
   initializeChart = (data, series, container, xAxis, yAxis) => {
     Highmaps.chart(container, {
+      colors: ['#616b7c'],
       chart: {
-        type: 'heatmap'
+        type: 'heatmap',
+        backgroundColor: null
       },
       title: {
         text: data.title
@@ -67,6 +69,10 @@ class HeatMap extends React.Component {
 }
 
 HeatMap.propTypes = {
-  data: React.PropTypes.object.isRequired
+  data: React.PropTypes.object.isRequired,
+  series: React.PropTypes.array.isRequired,
+  xAxis: React.PropTypes.array,
+  yAxis: React.PropTypes.string,
+  container: React.PropTypes.string.isRequired
 }
 export default HeatMap

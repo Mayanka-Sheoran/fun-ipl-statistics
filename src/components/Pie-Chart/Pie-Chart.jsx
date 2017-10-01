@@ -16,11 +16,13 @@ class PieChart extends React.Component {
   }
   initializeChart = (data, series, container) => {
     Highcharts.chart(container, {
+      colors: ['#a82a28', '#478724'],
       chart: {
         plotBackgroundColor: null,
         plotBorderWidth: null,
         plotShadow: false,
-        type: 'pie'
+        type: 'pie',
+        backgroundColor: null
       },
       title: {
         text: data.title
@@ -54,6 +56,8 @@ class PieChart extends React.Component {
 }
 
 PieChart.propTypes = {
-  data: React.PropTypes.object.isRequired
+  data: React.PropTypes.object.isRequired,
+  series: React.PropTypes.array.isRequired,
+  container: React.PropTypes.string.isRequired
 }
 export default PieChart

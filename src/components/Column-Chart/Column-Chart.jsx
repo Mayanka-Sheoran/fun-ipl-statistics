@@ -11,14 +11,15 @@ class ColumnChart extends React.Component {
     this.initializeChart(data, series, xAxisCategories, container)
   }
   render () {
-    console.log(this.props)
     return (< div id={this.props.container}
       className='scroll' / >)
   }
   initializeChart = (data, series, xAxisCategories, container) => {
     Highcharts.chart(container, {
+      colors: ['#616b7c'],
       chart: {
-        type: 'column'
+        type: 'column',
+        backgroundColor: null
       },
       title: {
         text: data.title
@@ -59,6 +60,9 @@ class ColumnChart extends React.Component {
 }
 
 ColumnChart.propTypes = {
-  data: React.PropTypes.object.isRequired
+  data: React.PropTypes.object.isRequired,
+  series: React.PropTypes.array.isRequired,
+  xAxisCategories: React.PropTypes.array,
+  container: React.PropTypes.string.isRequired
 }
 export default ColumnChart

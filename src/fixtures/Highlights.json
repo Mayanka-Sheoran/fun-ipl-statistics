@@ -1,18 +1,14 @@
 {
 "Highlights": [{
-  "type": "good",
-  "text": "This is my highlight number 1"
+  "text": "Chris Gayle has won the most number of man of the match awards throughout IPL (17). His batting strike rate is a staggering 152.4",
+  "img" : "Chris"
   },{
-  "type": "good",
-  "text": "This is my highlight number 2"
+  "text": "Virat Kohli holds the record for most runs scored by a batsman in IPL history (4115)"
   }, {
-  "type": "bad",
-  "text": "This is my highlight number 3"
+  "text": "M Chinnaswamy Stadium in Bangalore has hosted the most number of IPL matches (58)"
   },{
-  "type": "good",
-  "text": "This is my highlight number 4"
+  "text": "Lasith Malinga has take the most of wickets in IPL history (159)"
   }, {
-  "type": "warning",
-  "text": "This is my highlight number 5"
+  "text": "Suresh Raina holds the records for most number of catches in IPL history (79)"
   }]
 }
