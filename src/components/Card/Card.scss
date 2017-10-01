@@ -34,6 +34,7 @@
   height: 45vh;
   width: 25vw;
   overflow: hidden;
+  cursor: pointer;
 }
 .tile:hover {
   transition: opacity 2s cubic-bezier(.165, .84, .44, 1);

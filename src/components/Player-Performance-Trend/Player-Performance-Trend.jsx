@@ -16,6 +16,8 @@ import deliveries2013 from '../../fixtures/2013.json'
 import deliveries2014 from '../../fixtures/2014.json'
 import deliveries2015 from '../../fixtures/2015.json'
 import deliveries2016 from '../../fixtures/2016.json'
+import Card from '../Card/Card'
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs'
 
 const mapping = {
   2008: deliveries2008,
@@ -34,7 +36,38 @@ class PlayerPerformanceTrend extends React.Component {
     this.getSelectedYear = this.getSelectedYear.bind(this)
     this.getInitialState = this.getInitialState.bind(this)
     this.getSelectedPlayer = this.getSelectedPlayer.bind(this)
-    this.getInitialState()
+    this.calculateStats = this.calculateStats.bind(this)
+    this.state = {
+      series: [],
+      teams: [{'label': 'All', value: 'All'}],
+      options: _.uniq(_.map(matches, 'team1')),
+      seasons: _.uniq(_.map(matches, 'season')),
+      seasonsOptions: [{'label': 'All', value: 'All'}],
+      uniqPlayers: [],
+      players: [{'label': 'None', value: 'None'}],
+      heatMapData: {
+        name: 'Average runs per season',
+        title: 'Average runs per season'
+      },
+      heatMapSeries: [],
+      allPlayers: [],
+      selectedPlayer: 'None',
+      runsBarSeries: [],
+      runsBarData: {
+        title: 'Runs Scored in every season against the team on y axis'
+      },
+      wicketBarSeries: [],
+      wicketsBarData: {
+        title: 'Wickets taken in every season against the team on y axis'
+      },
+      boundaryPercentage: 0,
+      dotsPercentage: 0,
+      dotsGivenPercentage: 0,
+      extrasGivenPercentage: 0,
+      selectedYear: 'All',
+      xAxis: [],
+      xAxisWickets: []
+    }
   }
 
   getInitialState () {
@@ -45,14 +78,14 @@ class PlayerPerformanceTrend extends React.Component {
       seasons: _.uniq(_.map(matches, 'season')),
       seasonsOptions: [{'label': 'All', value: 'All'}],
       uniqPlayers: [],
-      players: [],
+      players: [{'label': 'None', value: 'None'}],
       heatMapData: {
         name: 'Average runs per season',
         title: 'Average runs per season'
       },
       heatMapSeries: [],
       allPlayers: [],
-      selectedPlayer: 'LMP Simmons',
+      selectedPlayer: this.state.selectedPlayer? this.state.selectedPlayer : 'None',
       runsBarSeries: [],
       runsBarData: {
         title: 'Runs Scored in every season'
@@ -65,7 +98,7 @@ class PlayerPerformanceTrend extends React.Component {
       dotsPercentage: 0,
       dotsGivenPercentage: 0,
       extrasGivenPercentage: 0,
-      selectedYear: '',
+      selectedYear: this.state.selectedYear ? this.state.selectedYear : 'All',
       xAxis: [],
       xAxisWickets: []
     }
@@ -93,8 +126,13 @@ class PlayerPerformanceTrend extends React.Component {
       newOption.value = item
       this.state.seasonsOptions.push(newOption)
     }, this)
+  }
 
-    const selectedPlayer = this.state.selectedPlayer
+  calculateStats(year, player){
+    console.log(year)
+     if(year == 'All'){
+    const selectedPlayer = player
+    console.log(selectedPlayer)
     const runsBarSeries = {}
     const boundarySeries = []
     const dotRuns = []
@@ -105,9 +143,9 @@ class PlayerPerformanceTrend extends React.Component {
     const totalBowledArray = []
     runsBarSeries.name = 'Runs'
     runsBarSeries.data = []
-    this.state.seasons.reverse().map(function (year) {
+    this.state.seasons.map(function (year) {
       const totalRunsMade = mapping[year].reduce(function (n, match) {
-        return n + (match.batsman == selectedPlayer ? parseInt(match['total_runs']) : 0)
+        return n + (match.batsman == selectedPlayer ? parseInt(match['batsman_runs']) : 0)
       }, 0)
       const totalBoundries = mapping[year].reduce(function (n, match) {
         return n + (match.batsman == selectedPlayer && (match['batsman_runs'] == '4' || match['batsman_runs'] == '6') ? parseInt(match['batsman_runs']) : 0)
@@ -151,18 +189,15 @@ class PlayerPerformanceTrend extends React.Component {
     const wicketBarSeries = {}
     wicketBarSeries.name = 'Wickets'
     wicketBarSeries.data = []
-    this.state.seasons.reverse().map(function (year) {
+    this.state.seasons.map(function (year) {
       const totalWicketsTook = _.filter(mapping[year], function (match) { if (match.bowler == selectedPlayer && match['player_dismissed'] && match['dismissal_kind'] !== 'run out') return match }).length
       wicketBarSeries.data.push(totalWicketsTook)
     }, this)
 
     this.state.wicketBarSeries.push(wicketBarSeries)
-  }
-
-  getSelectedYear (item) {
-    this.setState({ selectedYear: item.target.value })
-    if (item.target.value != 'All') {
-      const selectedPlayer = this.state.selectedPlayer
+     }
+     if(year!=='All'){
+       const selectedPlayer = player
       const runsBarSeries = {}
       const wicketBarSeries = {}
       runsBarSeries.name = 'Runs'
@@ -173,7 +208,6 @@ class PlayerPerformanceTrend extends React.Component {
       const newRunsBarSeries = []
       const matchOpponentsBowling = []
       const newWicketBarSeries = []
-      const year = item.target.value
       const deliveresPlayedByPlayer = _.filter(mapping[year], function (match) {
         return match['batsman'] == selectedPlayer
       })
@@ -200,7 +234,7 @@ class PlayerPerformanceTrend extends React.Component {
       newWicketBarSeries.push(wicketBarSeries)
 
       const totalRunsMade = mapping[year].reduce(function (n, match) {
-        return n + (match.batsman == selectedPlayer ? parseInt(match['total_runs']) : 0)
+        return n + (match.batsman == selectedPlayer ? parseInt(match['batsman_runs']) : 0)
       }, 0)
       const totalBoundries = mapping[year].reduce(function (n, match) {
         return n + (match.batsman == selectedPlayer && (match['batsman_runs'] == '4' || match['batsman_runs'] == '6') ? parseInt(match['batsman_runs']) : 0)
@@ -234,25 +268,74 @@ class PlayerPerformanceTrend extends React.Component {
         runsBarSeries: newRunsBarSeries,
         wicketBarSeries: newWicketBarSeries
       })
+     }
+  }
+  getSelectedYear (item) {
+    this.setState({ selectedYear: item.target.value })
+    if (item.target.value != 'All') {
+      this.getInitialState()
+      this.componentWillMount()
+      this.calculateStats(item.target.value, this.state.selectedPlayer)
     } else {
       this.getInitialState()
       this.componentWillMount()
+      this.calculateStats('All', this.state.selectedPlayer)
     }
   }
   getSelectedPlayer (item) {
     this.setState({selectedPlayer: item.target.value})
     this.getInitialState()
     this.componentWillMount()
+    this.calculateStats(this.state.selectedYear, item.target.value)
   }
   render () {
     console.log(this.state)
     return (<div className={classes.container + ' full-size'} >
-      <Dropdown optionList={this.state.players} onChange={this.getSelectedPlayer} />
-      <Dropdown optionList={this.state.seasonsOptions} onChange={this.getSelectedYear} />
-      <BarChart container='runs' series={this.state.runsBarSeries} xAxis={this.state.xAxis} data={this.state.runsBarData} />
-      <BarChart container='wicktes' series={this.state.wicketBarSeries} xAxis={this.state.xAxisWickets} data={this.state.wicketsBarData} />
-      <div>{this.state.boundaryPercentage || 0}% boundaries</div><span>{this.state.dotsPercentage || 0}% dots</span>
-      <div>{this.state.extrasGivenPercentage || 0}% extras</div><span>{this.state.dotsGivenPercentage || 0}% dots bowled</span>
+      <Card cardType='selector'>
+       <div className={classes.teamSelectorContainer}>
+        <div className={classes.dropDownContainer}>
+          <div className={classes.selectText}>Select a player</div>
+          <Dropdown optionList={this.state.players} onChange={this.getSelectedPlayer} />
+        </div>  
+        {this.state.selectedPlayer!=='None' && <div className={classes.dropDownContainer}>
+          <div className={classes.selectText}>Select a season</div>
+          <Dropdown optionList={this.state.seasonsOptions} onChange={this.getSelectedYear} />
+        </div>}  
+       </div>     
+      </Card>
+    {this.state.selectedPlayer!=='None' && <div className={classes.flexAround + ' full-width'}>
+      <div className='full-size'>
+         <Tabs>
+         <TabList>
+          <Tab>Runs</Tab>
+          <Tab>Wickets</Tab>
+        </TabList>
+          <TabPanel>
+            <div className='full-size' >
+                <BarChart container='runs' series={this.state.runsBarSeries} xAxis={this.state.xAxis} data={this.state.runsBarData} />
+            </div>
+          </TabPanel>
+          <TabPanel>
+            <div className='full-size'>
+               <BarChart container='wicktes' series={this.state.wicketBarSeries} xAxis={this.state.xAxisWickets} data={this.state.wicketsBarData} />
+            </div>
+          </TabPanel>
+        </Tabs>   
+      </div>
+      <div className='full-size'>
+          <div className='flex-center-xy full-width'><div>
+           <div className={classes.redNumber}>{this.state.boundaryPercentage || 0}%</div>
+           <div className={classes.mediumText}> Runs scores in boundaries </div></div>
+           <div>
+            <div  className={classes.greenNumber}>{this.state.dotsPercentage || 0}%</div>
+            <div className={classes.mediumText}> Dot balls faced</div></div></div>
+          <div className='flex-center-xy full-width'><div>
+           <div  className={classes.greenNumber}>{this.state.extrasGivenPercentage || 0}%</div>
+           <div className={classes.mediumText}> Extras conceded</div></div>
+           <div><div  className={classes.redNumber}>{this.state.dotsGivenPercentage || 0}%</div>
+          <div className={classes.mediumText}>Dot balls bowled</div></div></div>
+      </div>    
+    </div>} 
     </div >
     )
   }

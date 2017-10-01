@@ -9,3 +9,53 @@
     }
   }
 }
+.dropDownContainer {
+  text-align: end;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+.flexAround{
+  display: flex;
+  justify-content: center;
+}
+.selectText {
+  color: white;
+  font-size: 20px;
+  text-align: start;
+  padding: 10px;
+}
+.redNumber {
+  font-size: 60px;
+  font-weight: bold;
+  color: $theme_dark_red;
+  padding: 20px;
+  width: 20vw;
+}
+.greenNumber {
+  font-size: 60px;
+  font-weight: bold;
+  color: $theme_green;
+  padding: 20px;
+  width: 20vw;
+}
+.mediumText {
+  font-weight: bold;
+  color: $theme_blue;
+  font-size: 20px;
+  padding: 20px;
+}
+@media screen and (max-width: $mobile_breakpoint) {
+.flexAround{
+  display: block;
+}
+.redNumber{
+  font-size: 50px;
+}
+ .greenNumber{
+ font-size: 50px;
+}
+.mediumText{
+  font-size: 14px;
+}
+}
