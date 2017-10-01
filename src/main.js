@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom'
 import createBrowserHistory from 'history/lib/createHashHistory'
 import { useRouterHistory } from 'react-router'
 import { syncHistoryWithStore } from 'react-router-redux'
-import createStore from './redux/store/createStore'
+import createStore from './redux/createStore'
 import AppContainer from './containers/AppContainer'
 
 // ========================================================

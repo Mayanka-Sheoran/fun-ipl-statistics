@@ -1,17 +1,16 @@
+/* eslint-disable no-param-reassign*/
 import { combineReducers } from 'redux'
 import { routerReducer as router } from 'react-router-redux'
-import loaderVisibility from '../reducers/loader'
+import commonReducer from './common'
 
-export const makeRootReducer = (asyncReducers) => {
-  return combineReducers({
+const makeRootReducer = asyncReducers => combineReducers({
     // Add sync reducers here
-    router,
-    ...asyncReducers,
-    loaderVisibility
-  })
-}
+  router,
+  commonData: commonReducer,
+  ...asyncReducers
+})
 
-export const injectReducer = (store, {key, reducer}) => {
+export const injectReducer = (store, { key, reducer }) => {
   store.asyncReducers[key] = reducer
   store.replaceReducer(makeRootReducer(store.asyncReducers))
 }

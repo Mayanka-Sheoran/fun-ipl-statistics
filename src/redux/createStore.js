@@ -1,13 +1,18 @@
+/* eslint-disable no-param-reassign*/
 import { applyMiddleware, compose, createStore } from 'redux'
 import { routerMiddleware } from 'react-router-redux'
+import _ from 'lodash'
 import thunk from 'redux-thunk'
-import makeRootReducer from './reducers'
+import promiseMiddleware from 'redux-promise-middleware'
+import makeRootReducer from './modules/reducers'
+// Create the ReduxGTM middleware
+// const analyticsMiddleware = createMiddleware(eventDefinitionsMap)
 
 export default (initialState = {}, history) => {
   // ======================================================
   // Middleware Configuration
   // ======================================================
-  const middleware = [thunk, routerMiddleware(history)]
+  const middleware = [thunk, routerMiddleware(history), promiseMiddleware()]
 
   // ======================================================
   // Store Enhancers
@@ -28,15 +33,15 @@ export default (initialState = {}, history) => {
     initialState,
     compose(
       applyMiddleware(...middleware),
-      ...enhancers
-    )
+      ...enhancers,
+    ),
   )
   store.asyncReducers = {}
 
   if (module.hot) {
-    module.hot.accept('./reducers', () => {
-      const reducers = require('./reducers').default
-      store.replaceReducer(reducers(store.asyncReducers))
+    module.hot.accept('./modules/reducers', () => {
+      const reducers = makeRootReducer
+      store.replaceReducer(reducers)
     })
   }
 
