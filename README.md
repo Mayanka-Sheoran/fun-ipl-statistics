@@ -43,3 +43,4 @@ Technical Debt
   * Move javascript logic from jsx files
   * Optimize data load instead of loading all the data on the dashboard page
   * Move data to firebase or AWS
+  * Add unit tests
