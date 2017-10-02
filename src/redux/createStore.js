@@ -1,7 +1,6 @@
 /* eslint-disable no-param-reassign*/
 import { applyMiddleware, compose, createStore } from 'redux'
 import { routerMiddleware } from 'react-router-redux'
-import _ from 'lodash'
 import thunk from 'redux-thunk'
 import promiseMiddleware from 'redux-promise-middleware'
 import makeRootReducer from './modules/reducers'

@@ -3,8 +3,14 @@
 .container {
    :global {
     .slider,
-    slider-frame {
-      min-height: 200px;
+    slider-frame, slider-list {
+      height: 200px !important;
+    }
+    .slider-list {
+       height: 200px !important;
+    }
+    .slider-frame {
+      height: 200px !important;
     }
     .slider-decorator-0,
     .slider-decorator-1 {

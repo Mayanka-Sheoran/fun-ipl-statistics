@@ -116,7 +116,6 @@ class PlayerPerformanceTrend extends React.Component {
   }
 
   calculateStats (year, player) {
-    console.log(this.mapping[year])
     if (year === 'All') {
       const selectedPlayer = player
       const runsBarSeries = {}
@@ -179,7 +178,7 @@ class PlayerPerformanceTrend extends React.Component {
       wicketBarSeries.data = []
       this.state.seasons.map(function (year) {
         const totalWicketsTook = _.filter(this.mapping[year], function (match) {
-          if (match.bowler === selectedPlayer && match['player_dismissed']!=='' &&
+          if (match.bowler === selectedPlayer && match['player_dismissed'] !== '' &&
             match['dismissal_kind'] !== 'run out') return match
         }).length
         wicketBarSeries.data.push(totalWicketsTook)
@@ -218,7 +217,7 @@ class PlayerPerformanceTrend extends React.Component {
       _.map(_.groupBy(deliveresBowledByPlayer, 'match_id'), function (item) {
         matchOpponentsBowling.push(item[0]['batting_team'])
         const wicketsTakenByPlayerInMatch = _.filter(item, function (match) {
-          if (match['player_dismissed']!== '' && match['dismissal_kind'] !== 'run out') { return match }
+          if (match['player_dismissed'] !== '' && match['dismissal_kind'] !== 'run out') { return match }
         }).length || 0
         wicketBarSeries.data.push(wicketsTakenByPlayerInMatch)
       })
@@ -339,9 +338,19 @@ class PlayerPerformanceTrend extends React.Component {
 
 PlayerPerformanceTrend.propTypes = {
   params: React.PropTypes.object.isRequired,
+  matches: React.PropTypes.array,
+  '2008': React.PropTypes.array,
+  '2009': React.PropTypes.array,
+  '2010': React.PropTypes.array,
+  '2011': React.PropTypes.array,
+  '2012': React.PropTypes.array,
+  '2013': React.PropTypes.array,
+  '2014': React.PropTypes.array,
+  '2015': React.PropTypes.array,
+  '2016': React.PropTypes.array
 }
 
-const mapStateToProps = (state) => ({ 
+const mapStateToProps = (state) => ({
   matches: state.commonData.matches.data,
   '2008': state.commonData['2008'],
   '2009': state.commonData['2009'],

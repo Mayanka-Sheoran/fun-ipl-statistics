@@ -102,11 +102,12 @@ class GroundPerformanceTrend extends React.Component {
 }
 
 GroundPerformanceTrend.propTypes = {
-  params: React.PropTypes.object.isRequired
+  params: React.PropTypes.object.isRequired,
+  matches: React.PropTypes.array
 }
 
 GroundPerformanceTrend.propTypes = {
-  params: React.PropTypes.object.isRequired,
+  params: React.PropTypes.object.isRequired
 }
 
 const mapStateToProps = (state) => ({ matches: state.commonData.matches.data })

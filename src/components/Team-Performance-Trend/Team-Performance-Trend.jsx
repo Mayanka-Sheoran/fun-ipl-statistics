@@ -85,7 +85,6 @@ class TeamPerformanceTrend extends React.Component {
     }
   }
   componentWillMount () {
-    console.log(this.props)
     this.state.options.map(function (team) {
       this.state.seasons.map(function (year) {
         const dataArray = []
@@ -97,7 +96,7 @@ class TeamPerformanceTrend extends React.Component {
         }), 'match_id')
         _.map(groupByMatch, function (match) {
           const runsInOneMatch = match.reduce(function (n, match) {
-            return n + (parseInt(match.total_runs))
+            return n + (parseInt(match['total_runs']))
           }, 0)
           averageArray.push(runsInOneMatch)
         })
@@ -279,9 +278,19 @@ class TeamPerformanceTrend extends React.Component {
 
 TeamPerformanceTrend.propTypes = {
   params: React.PropTypes.object.isRequired,
+  matches: React.PropTypes.array,
+  '2008': React.PropTypes.array,
+  '2009': React.PropTypes.array,
+  '2010': React.PropTypes.array,
+  '2011': React.PropTypes.array,
+  '2012': React.PropTypes.array,
+  '2013': React.PropTypes.array,
+  '2014': React.PropTypes.array,
+  '2015': React.PropTypes.array,
+  '2016': React.PropTypes.array
 }
 
-const mapStateToProps = (state) => ({ 
+const mapStateToProps = (state) => ({
   matches: state.commonData.matches.data,
   '2008': state.commonData['2008'],
   '2009': state.commonData['2009'],
@@ -292,6 +301,6 @@ const mapStateToProps = (state) => ({
   '2014': state.commonData['2014'],
   '2015': state.commonData['2015'],
   '2016': state.commonData['2016']
-   })
+})
 
 export default connect(mapStateToProps)(TeamPerformanceTrend)
