@@ -1,6 +1,7 @@
 # fun-ipl-statistics 
 
 Some fun facts about the Indian Premier League and analysis of team performances and player performances through the seasons.
+Takes a while to load since all the data comes to the FE and all data crunching and manipulation is done on the FE. 
 
  * PWA (Progressive Web App)
  * Responsive web app for both mobile and web
@@ -28,6 +29,7 @@ Tools and Technologies used
   * Lodash for data manipulation
   * Webpack for bundling
   * Highcharts for data visualisations
+  * Firebase for hosting the data since the data set is too big to be part of the FE build. 
   
 Features in Progress
 
@@ -42,5 +44,4 @@ Technical Debt
 
   * Move javascript logic from jsx files
   * Optimize data load instead of loading all the data on the dashboard page
-  * Move data to firebase or AWS
   * Add unit tests
