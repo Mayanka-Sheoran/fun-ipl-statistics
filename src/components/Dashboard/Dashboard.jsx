@@ -23,8 +23,8 @@ class Dashboard extends React.Component {
     return (<div className={classes.container + ' full-size px1 py2'}>
       <Card cardType='carousal'><Carousel /></Card>
       <div className={classes.bottomCardContainer}>
-        <div >
-          <Card click={this.navigate} cardType='tile' cardDetails='team' cardTitle='Know your favourite team better' /></div>
+        <div onClick={() => this.navigate('/team')} >
+          <Card cardType='tile' cardDetails='team' cardTitle='Know your favourite team better' /></div>
         <div onClick={() => this.navigate('/player')}>
           <Card cardType='tile' cardDetails='player' cardTitle='Player performances through the last 9 seasons' /></div>
         <div onClick={() => this.navigate('/ground')}>
