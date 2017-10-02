@@ -27,8 +27,8 @@ CACHE MANIFEST
 ./app.d70e324d364a72bcd6a64face598a05e.css
 ./favicon.ico
 ./index.html
-./manifest.json
 ./ball-favicon.png
+./manifest.json
 
 NETWORK:
 *
