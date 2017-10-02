@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 
 const Loader = ({loaderVisibility = false}) => (
   <div className={classes.container + ' full-size ' + (loaderVisibility ? classes.show : '')}>
+   <div className={classes.loaderText}>This might take a while</div>
     <div className='loader' />
   </div>
 )

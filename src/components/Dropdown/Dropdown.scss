@@ -1,11 +1,19 @@
 @import '../../styles/variables';
 
 .selected {
-  background: url('../../assets/down-arrow.svg') no-repeat right center;
   font-size: $font-medium;
   width: 215px;
   font-size: 15px;
-  color: $theme_white;
+  color: $theme_black;
+  height: 50px;
+  border: solid $theme_white 1px;
+  padding: 8px;
+}
+.selected option {
+  font-size: $font-medium;
+  width: 215px;
+  font-size: 15px;
+  color: $theme_black;
   height: 50px;
   border: solid $theme_white 1px;
   padding: 8px;

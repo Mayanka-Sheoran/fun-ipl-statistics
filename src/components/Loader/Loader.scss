@@ -9,7 +9,7 @@
   opacity: 0.8;
   z-index: 99;
 
-  :global {
+   :global {
     .loader {
       position: fixed;
       left: calc(50% - 25px);
@@ -29,5 +29,20 @@
 
   &.show {
     display: block;
+  }
+}
+
+.loaderText {
+  font-size: 20px;
+  color: $theme_dark_red;
+  position: absolute;
+  top: 33vh;
+  left: 45vw;
+  font-weight: bold;
+}
+
+@media screen and (max-width: $mobile_breakpoint) {
+  .loaderText {
+    left: 20vw;
   }
 }
