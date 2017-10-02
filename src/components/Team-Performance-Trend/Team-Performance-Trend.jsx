@@ -283,15 +283,15 @@ TeamPerformanceTrend.propTypes = {
 
 const mapStateToProps = (state) => ({ 
   matches: state.commonData.matches.data,
-  '2008': state.commonData['2008'].data,
-  '2009': state.commonData['2009'].data,
-  '2010': state.commonData['2010'].data,
-  '2011': state.commonData['2011'].data,
-  '2012': state.commonData['2012'].data,
-  '2013': state.commonData['2013'].data,
-  '2014': state.commonData['2014'].data,
-  '2015': state.commonData['2015'].data,
-  '2016': state.commonData['2016'].data
+  '2008': state.commonData['2008'],
+  '2009': state.commonData['2009'],
+  '2010': state.commonData['2010'],
+  '2011': state.commonData['2011'],
+  '2012': state.commonData['2012'],
+  '2013': state.commonData['2013'],
+  '2014': state.commonData['2014'],
+  '2015': state.commonData['2015'],
+  '2016': state.commonData['2016']
    })
 
 export default connect(mapStateToProps)(TeamPerformanceTrend)

@@ -116,6 +116,7 @@ class PlayerPerformanceTrend extends React.Component {
   }
 
   calculateStats (year, player) {
+    console.log(this.mapping[year])
     if (year === 'All') {
       const selectedPlayer = player
       const runsBarSeries = {}
@@ -130,30 +131,30 @@ class PlayerPerformanceTrend extends React.Component {
       runsBarSeries.data = []
       this.state.seasons.map(function (year) {
         const totalRunsMade = this.mapping[year].reduce(function (n, match) {
-          return n + (match.batsman === selectedPlayer ? parseInt(match['batsman_runs']) : 0)
+          return n + (match.batsman === selectedPlayer ? match['batsman_runs'] : 0)
         }, 0)
         const totalBoundries = this.mapping[year].reduce(function (n, match) {
           return n + (match.batsman === selectedPlayer &&
-            (match['batsman_runs'] === '4' || match['batsman_runs'] === '6') ? parseInt(match['batsman_runs']) : 0)
+            (match['batsman_runs'] === 4 || match['batsman_runs'] === 6) ? match['batsman_runs'] : 0)
         }, 0)
         const totalDots = this.mapping[year].reduce(function (n, match) {
-          return n + (match.batsman === selectedPlayer && (match['batsman_runs'] === '0'))
+          return n + (match.batsman === selectedPlayer && (match['batsman_runs'] === 0))
         }, 0)
         const totalBallsFaced = this.mapping[year].reduce(function (n, match) {
           return n + (match.batsman === selectedPlayer)
         }, 0)
         const dotsGiven = this.mapping[year].reduce(function (n, match) {
-          return n + (match.bowler === selectedPlayer && (match['total_runs'] === '0'))
+          return n + (match.bowler === selectedPlayer && (match['total_runs'] === 0))
         }, 0)
         const totalBowled = this.mapping[year].reduce(function (n, match) {
           return n + (match.bowler === selectedPlayer)
         }, 0)
         const extrasGiven = this.mapping[year].reduce(function (n, match) {
           return n + (match.bowler === selectedPlayer &&
-            (match['extra_runs'] !== '0') ? parseInt(match['extra_runs']) : 0)
+            (match['extra_runs'] !== 0) ? match['extra_runs'] : 0)
         }, 0)
         const totalRunsGiven = this.mapping[year].reduce(function (n, match) {
-          return n + (match.bowler === selectedPlayer ? parseInt(match['total_runs']) : 0)
+          return n + (match.bowler === selectedPlayer ? match['total_runs'] : 0)
         }, 0)
         dotsgivenArray.push(dotsGiven)
         extrasGivenArray.push(extrasGiven)
@@ -178,7 +179,7 @@ class PlayerPerformanceTrend extends React.Component {
       wicketBarSeries.data = []
       this.state.seasons.map(function (year) {
         const totalWicketsTook = _.filter(this.mapping[year], function (match) {
-          if (match.bowler === selectedPlayer && match['player_dismissed'] &&
+          if (match.bowler === selectedPlayer && match['player_dismissed']!=='' &&
             match['dismissal_kind'] !== 'run out') return match
         }).length
         wicketBarSeries.data.push(totalWicketsTook)
@@ -208,7 +209,7 @@ class PlayerPerformanceTrend extends React.Component {
       _.map(_.groupBy(deliveresPlayedByPlayer, 'match_id'), function (item) {
         matchOpponents.push(item[0]['bowling_team'])
         const runsMadeByPlayerInMatch = item.reduce(function (n, match) {
-          return n + (parseInt(match['total_runs']))
+          return n + (match['total_runs'])
         }, 0)
         runsBarSeries.data.push(runsMadeByPlayerInMatch)
       })
@@ -217,7 +218,7 @@ class PlayerPerformanceTrend extends React.Component {
       _.map(_.groupBy(deliveresBowledByPlayer, 'match_id'), function (item) {
         matchOpponentsBowling.push(item[0]['batting_team'])
         const wicketsTakenByPlayerInMatch = _.filter(item, function (match) {
-          if (match['player_dismissed'] && match['dismissal_kind'] !== 'run out') { return match }
+          if (match['player_dismissed']!== '' && match['dismissal_kind'] !== 'run out') { return match }
         }).length || 0
         wicketBarSeries.data.push(wicketsTakenByPlayerInMatch)
       })
@@ -225,31 +226,31 @@ class PlayerPerformanceTrend extends React.Component {
       newWicketBarSeries.push(wicketBarSeries)
 
       const totalRunsMade = this.mapping[year].reduce(function (n, match) {
-        return n + (match.batsman === selectedPlayer ? parseInt(match['batsman_runs']) : 0)
+        return n + (match.batsman === selectedPlayer ? match['batsman_runs'] : 0)
       }, 0)
       const totalBoundries = this.mapping[year].reduce(function (n, match) {
         return n + (match.batsman === selectedPlayer &&
-          (match['batsman_runs'] === '4' || match['batsman_runs'] === '6')
-          ? parseInt(match['batsman_runs']) : 0)
+          (match['batsman_runs'] === 4 || match['batsman_runs'] === 6)
+          ? match['batsman_runs'] : 0)
       }, 0)
       const totalDots = this.mapping[year].reduce(function (n, match) {
-        return n + (match.batsman === selectedPlayer && (match['batsman_runs'] === '0'))
+        return n + (match.batsman === selectedPlayer && (match['batsman_runs'] === 0))
       }, 0)
       const totalBallsFaced = this.mapping[year].reduce(function (n, match) {
         return n + (match.batsman === selectedPlayer)
       }, 0)
       const dotsGiven = this.mapping[year].reduce(function (n, match) {
-        return n + (match.bowler === selectedPlayer && (match['total_runs'] === '0'))
+        return n + (match.bowler === selectedPlayer && (match['total_runs'] === 0))
       }, 0)
       const totalBowled = this.mapping[year].reduce(function (n, match) {
         return n + (match.bowler === selectedPlayer)
       }, 0)
       const extrasGiven = this.mapping[year].reduce(function (n, match) {
-        return n + (match.bowler === selectedPlayer && (match['extra_runs'] !== '0')
-          ? parseInt(match['extra_runs']) : 0)
+        return n + (match.bowler === selectedPlayer && (match['extra_runs'] !== 0)
+          ? match['extra_runs'] : 0)
       }, 0)
       const totalRunsGiven = this.mapping[year].reduce(function (n, match) {
-        return n + (match.bowler === selectedPlayer ? parseInt(match['total_runs']) : 0)
+        return n + (match.bowler === selectedPlayer ? match['total_runs'] : 0)
       }, 0)
 
       this.setState({
@@ -342,15 +343,15 @@ PlayerPerformanceTrend.propTypes = {
 
 const mapStateToProps = (state) => ({ 
   matches: state.commonData.matches.data,
-  '2008': state.commonData['2008'].data,
-  '2009': state.commonData['2009'].data,
-  '2010': state.commonData['2010'].data,
-  '2011': state.commonData['2011'].data,
-  '2012': state.commonData['2012'].data,
-  '2013': state.commonData['2013'].data,
-  '2014': state.commonData['2014'].data,
-  '2015': state.commonData['2015'].data,
-  '2016': state.commonData['2016'].data
-  })
+  '2008': state.commonData['2008'],
+  '2009': state.commonData['2009'],
+  '2010': state.commonData['2010'],
+  '2011': state.commonData['2011'],
+  '2012': state.commonData['2012'],
+  '2013': state.commonData['2013'],
+  '2014': state.commonData['2014'],
+  '2015': state.commonData['2015'],
+  '2016': state.commonData['2016']
+})
 
 export default connect(mapStateToProps)(PlayerPerformanceTrend)

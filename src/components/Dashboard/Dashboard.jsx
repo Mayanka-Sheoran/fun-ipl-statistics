@@ -13,7 +13,9 @@ class Dashboard extends React.Component {
     this.navigate= this.navigate.bind(this)
   }
   componentDidMount(){
-    this.props.actions.getMatches()
+    if(this.props.matches.length === 0){
+      this.props.actions.getMatches()
+    }  
   }
   navigate (link) {
     this.context.router.push(link)
@@ -38,8 +40,12 @@ function mapDispatchToProps(dispatch) {
     actions: bindActionCreators(commonActions, dispatch)
   }
 }
-
+function mapStateToProps(state){ 
+  return {
+    matches: state.commonData.matches.data || []
+  }  
+}
 Dashboard.contextTypes = {
   router: React.PropTypes.object.isRequired
 }
-export default connect(null, mapDispatchToProps)(Dashboard)
+export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)
